@@ -1,6 +1,6 @@
 package br.inatel.conversionmanager.controller;
 
-import br.inatel.conversionmanager.adapter.ConversioAdapter;
+import br.inatel.conversionmanager.adapter.ConversionAdapter;
 
 import br.inatel.conversionmanager.model.entities.ExchangeRateResponse;
 import org.springframework.http.ResponseEntity;
@@ -12,15 +12,15 @@ import java.util.List;
 @RequestMapping("/api/exchange-rates")
 public class ConversionController {
 
-    private final ConversioAdapter conversioAdapter;
+    private final ConversionAdapter conversionAdapter;
 
-    public ConversionController(ConversioAdapter conversioAdapter) {
-        this.conversioAdapter = conversioAdapter;
+    public ConversionController(ConversionAdapter conversionAdapter) {
+        this.conversionAdapter = conversionAdapter;
     }
 
     @GetMapping
     public ResponseEntity<List<ExchangeRateResponse>> getExchangeRates() {
-        List<ExchangeRateResponse> exchangeRates = conversioAdapter.getExchangeRates();
+        List<ExchangeRateResponse> exchangeRates = conversionAdapter.getExchangeRates();
 
         if (exchangeRates.isEmpty()) {
             return ResponseEntity.noContent().build();
