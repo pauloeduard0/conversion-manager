@@ -2,11 +2,14 @@ package br.inatel.conversionmanager.controller;
 
 import br.inatel.conversionmanager.adapter.ConversionAdapter;
 
+import br.inatel.conversionmanager.model.dto.ConversionDto;
 import br.inatel.conversionmanager.model.entities.ExchangeRateResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/exchange-rates")
@@ -27,5 +30,18 @@ public class ConversionController {
         }
 
         return ResponseEntity.ok(exchangeRates);
+    }
+
+    @PostMapping
+    public ResponseEntity<ConversionDto> saveConversion(@Valid @RequestBody ConversionDto conversionDto) {
+
+        ConversionDto savedConversion = new ConversionDto(
+                UUID.randomUUID(),
+                conversionDto.amount(),
+                conversionDto.to()
+        );
+
+        // Retornar a resposta com status 201 (Created) e o objeto ConversionDto como corpo da resposta
+        return ResponseEntity.created(null).body(savedConversion);
     }
 }
