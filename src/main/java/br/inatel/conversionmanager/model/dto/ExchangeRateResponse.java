@@ -1,11 +1,14 @@
-package br.inatel.conversionmanager.model.entities;
+package br.inatel.conversionmanager.model.dto;
+
+import lombok.Builder;
 
 import java.util.Map;
 
+@Builder
 public record ExchangeRateResponse(long timestamp,
                            String base,
                            boolean success,
-                           Map<String, Double> rates,
+                           Map<String, Float> rates,
                            String date,
                            boolean historical) {
 }

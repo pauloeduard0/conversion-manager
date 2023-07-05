@@ -16,7 +16,7 @@ public class DefaultConversionValidator implements DefaultValidator {
 
     @Override
     public void isValid(Conversion conversion) {
-        String toCurrency = conversion.getToCurrency();
+        String toCurrency = conversion.getTocurrency();
 
         if (conversionAdapter.getExchangeRates().stream()
                 .noneMatch(exchangeRate -> exchangeRate.rates().containsKey(toCurrency.substring(0, 3)))) {

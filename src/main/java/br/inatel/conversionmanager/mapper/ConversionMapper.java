@@ -10,10 +10,11 @@ public class ConversionMapper {
     public static ConversionDto toDto(Conversion conversion) {
         return new ConversionDto(
                 conversion.getId(),
+                conversion.getBase(),
                 conversion.getAmount(),
-                conversion.getToCurrency(),
-                conversion.getConversionDate(),
-                conversion.getBaseCurrency()
+                conversion.getTocurrency(),
+                conversion.getConverted(),
+                conversion.getDate()
         );
     }
 
@@ -21,9 +22,10 @@ public class ConversionMapper {
         return Conversion.builder()
                 .id(conversionDto.id())
                 .amount(conversionDto.amount())
-                .toCurrency(conversionDto.to())
-                .conversionDate(conversionDto.date())
-                .baseCurrency(conversionDto.baseCurrency())
+                .tocurrency(conversionDto.to())
+                .converted(conversionDto.convertedAmount())
+                .date(conversionDto.date())
+                .base(conversionDto.baseCurrency())
                 .build();
     }
 }

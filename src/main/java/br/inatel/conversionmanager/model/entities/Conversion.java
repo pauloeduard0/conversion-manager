@@ -1,5 +1,6 @@
 package br.inatel.conversionmanager.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,12 +22,15 @@ public class Conversion {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    private String base;
+
     private Float amount;
 
-    private String baseCurrency;
+    private String tocurrency;
 
-    private String toCurrency;
+    private Float converted;
 
-    private LocalDate conversionDate;
+    @JsonFormat(pattern = "YYYY-MM-DD")
+    private LocalDate date;
 
 }

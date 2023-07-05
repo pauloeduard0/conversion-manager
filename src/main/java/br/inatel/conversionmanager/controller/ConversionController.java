@@ -46,10 +46,11 @@ public class ConversionController {
 
         ConversionDto savedConversion = new ConversionDto(
                 UUID.randomUUID(),
+                baseCurrency,
                 conversionDto.amount(),
                 conversionDto.to(),
-                currentDate,
-                baseCurrency
+                conversionDto.convertedAmount(),
+                currentDate
         );
 
         return ResponseEntity.created(null).body(conversionService.saveConversion(savedConversion));
