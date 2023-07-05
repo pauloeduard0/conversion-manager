@@ -3,7 +3,8 @@ package br.inatel.conversionmanager.controller;
 import br.inatel.conversionmanager.adapter.ConversionAdapter;
 
 import br.inatel.conversionmanager.model.dto.ConversionDto;
-import br.inatel.conversionmanager.model.entities.ExchangeRateResponse;
+import br.inatel.conversionmanager.model.dto.ExchangeRateResponse;
+import br.inatel.conversionmanager.service.ConversionService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +19,11 @@ public class ConversionController {
 
     private final ConversionAdapter conversionAdapter;
 
-    public ConversionController(ConversionAdapter conversionAdapter) {
+    private final ConversionService conversionService;
+
+    public ConversionController(ConversionAdapter conversionAdapter, ConversionService conversionService) {
         this.conversionAdapter = conversionAdapter;
+        this.conversionService = conversionService;
     }
 
     @GetMapping
@@ -37,7 +41,7 @@ public class ConversionController {
     public ResponseEntity<ConversionDto> saveConversion(@Valid @RequestBody ConversionDto conversionDto) {
 
         LocalDate currentDate = LocalDate.now();
-        // Defina a moeda base como "EURO"
+
         String baseCurrency = "EURO";
 
         ConversionDto savedConversion = new ConversionDto(
@@ -48,7 +52,6 @@ public class ConversionController {
                 baseCurrency
         );
 
-        // Retornar a resposta com status 201 (Created) e o objeto ConversionDto como corpo da resposta
-        return ResponseEntity.created(null).body(savedConversion);
+        return ResponseEntity.created(null).body(conversionService.saveConversion(savedConversion));
     }
 }
