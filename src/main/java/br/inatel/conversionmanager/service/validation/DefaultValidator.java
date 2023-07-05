@@ -1,7 +1,7 @@
 package br.inatel.conversionmanager.service.validation;
 
-import br.inatel.conversionmanager.model.dto.ExchangeRateResponse;
+import br.inatel.conversionmanager.model.entities.Conversion;
 
 public interface DefaultValidator {
-    void isValid(ExchangeRateResponse exchangeRateResponse);
+    void isValid(Conversion conversion);
 }

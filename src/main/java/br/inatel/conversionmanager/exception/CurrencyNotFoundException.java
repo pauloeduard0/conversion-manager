@@ -1,9 +1,9 @@
 package br.inatel.conversionmanager.exception;
 
-import br.inatel.conversionmanager.model.dto.ExchangeRateResponse;
+import br.inatel.conversionmanager.model.entities.Conversion;
 
 public class CurrencyNotFoundException extends RuntimeException{
-    public CurrencyNotFoundException(ExchangeRateResponse exchangeRateResponse) {
-        super(String.format("Currency with '%s' was not found.", exchangeRateResponse.rates()));
+    public CurrencyNotFoundException(Conversion conversion) {
+        super(String.format("Currency with '%s' was not found.", conversion.getToCurrency()));
     }
 }

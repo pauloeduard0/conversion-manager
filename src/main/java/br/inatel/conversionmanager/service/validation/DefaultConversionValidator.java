@@ -2,7 +2,7 @@ package br.inatel.conversionmanager.service.validation;
 
 import br.inatel.conversionmanager.adapter.ConversionAdapter;
 import br.inatel.conversionmanager.exception.CurrencyNotFoundException;
-import br.inatel.conversionmanager.model.dto.ExchangeRateResponse;
+import br.inatel.conversionmanager.model.entities.Conversion;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,10 +15,12 @@ public class DefaultConversionValidator implements DefaultValidator {
     }
 
     @Override
-    public void isValid(ExchangeRateResponse exchangeRateResponse) {
+    public void isValid(Conversion conversion) {
+        String toCurrency = conversion.getToCurrency();
+
         if (conversionAdapter.getExchangeRates().stream()
-                .noneMatch(conver ->conver.rates().equals(exchangeRateResponse.rates()))) {
-            throw new CurrencyNotFoundException(exchangeRateResponse);
+                .noneMatch(exchangeRate -> exchangeRate.rates().containsKey(toCurrency.substring(0, 3)))) {
+            throw new CurrencyNotFoundException(conversion);
         }
-        }
+    }
 }
