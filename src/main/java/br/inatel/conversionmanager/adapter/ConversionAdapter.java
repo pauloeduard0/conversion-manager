@@ -2,7 +2,9 @@ package br.inatel.conversionmanager.adapter;
 
 import br.inatel.conversionmanager.model.dto.ExchangeRateResponse;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -13,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
+@Slf4j
 public class ConversionAdapter {
 
     @Value("${api.conversion.host}")
@@ -60,4 +63,8 @@ public class ConversionAdapter {
         return Collections.emptyList();
     }
 
+    @CacheEvict("exchangeRates")
+    public void clearCurrencyCache() {
+        log.info("Cache cleared");
+    }
 }
