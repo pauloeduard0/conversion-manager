@@ -8,6 +8,8 @@ import br.inatel.conversionmanager.model.dto.ExchangeRateResponse;
 import br.inatel.conversionmanager.model.entities.Conversion;
 import br.inatel.conversionmanager.repository.ConversionRepository;
 import br.inatel.conversionmanager.service.validation.DefaultValidator;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,6 +56,10 @@ public class ConversionService {
             }
         }
         return null;
+    }
+
+    public Page<ConversionDto> getAllConversions(Pageable pageable) {
+        return conversionRepository.findAll(pageable).map(ConversionMapper::toDto);
     }
 }
 
