@@ -8,7 +8,7 @@ import java.util.UUID;
 @Builder
 public record ConversionDto(
 
-        UUID id,
+        //UUID id,
         String baseCurrency,
         Float amount,
         String to,

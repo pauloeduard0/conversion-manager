@@ -9,7 +9,7 @@ public class ConversionMapper {
 
     public static ConversionDto toDto(Conversion conversion) {
         return new ConversionDto(
-                conversion.getId(),
+                //conversion.getId(),
                 conversion.getBase(),
                 conversion.getAmount(),
                 conversion.getTocurrency(),
@@ -20,7 +20,7 @@ public class ConversionMapper {
 
     public static Conversion toEntity(ConversionDto conversionDto) {
         return Conversion.builder()
-                .id(conversionDto.id())
+                //.id(conversionDto.id())
                 .amount(conversionDto.amount())
                 .tocurrency(conversionDto.to())
                 .converted(conversionDto.convertedAmount())

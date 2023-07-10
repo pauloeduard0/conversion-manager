@@ -53,7 +53,7 @@ public class ConversionController {
         String baseCurrency = "EURO";
 
         ConversionDto savedConversion = new ConversionDto(
-                UUID.randomUUID(),
+                //UUID.randomUUID(),
                 baseCurrency,
                 conversionDto.amount(),
                 conversionDto.to(),
