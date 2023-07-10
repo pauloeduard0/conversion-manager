@@ -14,26 +14,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.support.WebExchangeBindException;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public List<ProblemDetail> handlerMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        ArrayList<ProblemDetail> problemDetailsList = new ArrayList<>();
-        e.getFieldErrors().forEach(fieldError -> {
-            ProblemDetail problemDetail = ProblemDetail.
-                    forStatusAndDetail(HttpStatus.BAD_REQUEST, Objects.requireNonNull(fieldError.getDefaultMessage()));
-            problemDetail.setTitle("Method Argument Not Valid Exception");
-            problemDetail.setType(URI.create("https://api.quotationmanagement.com/errors/bad-request"));
-            problemDetailsList.add(problemDetail);
-        });
-
-        return problemDetailsList;
+    public ProblemDetail handlerMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+        problemDetail.setTitle("Method Argument Not Valid Exception");
+        problemDetail.setType(URI.create("https://api.quotationmanagement.com/errors/bad-reques"));
+        return problemDetail;
     }
 
     @ExceptionHandler(CurrencyNotFoundException.class)
