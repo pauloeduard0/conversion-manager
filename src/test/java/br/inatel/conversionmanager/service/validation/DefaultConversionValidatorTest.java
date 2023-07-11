@@ -4,15 +4,11 @@ import br.inatel.conversionmanager.adapter.ConversionAdapter;
 import br.inatel.conversionmanager.exception.CurrencyNotFoundException;
 import br.inatel.conversionmanager.model.dto.ExchangeRateResponse;
 import br.inatel.conversionmanager.model.entities.Conversion;
-import br.inatel.conversionmanager.service.ConversionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.*;

@@ -1,4 +1,4 @@
-Feature: Testing ConversionController
+Feature: Testing Post ConversionController
 
   Background:
     * url 'http://localhost:8080'
