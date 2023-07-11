@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ConversionService {
@@ -50,16 +51,22 @@ public class ConversionService {
     }
 
     private ExchangeRateResponse findExchangeRateByCurrency(List<ExchangeRateResponse> exchangeRates, String currency) {
-        for (ExchangeRateResponse exchangeRate : exchangeRates) {
-            if (exchangeRate.rates().containsKey(currency)) {
-                return exchangeRate;
-            }
-        }
-        return null;
+        return exchangeRates.stream()
+                .filter(exchangeRate -> exchangeRate.rates().containsKey(currency))
+                .findFirst()
+                .orElse(null);
     }
 
     public Page<ConversionDto> getAllConversions(Pageable pageable) {
         return conversionRepository.findAll(pageable).map(ConversionMapper::toDto);
+    }
+
+    public List<ConversionDto> getConversionsByCurrency(String tocurrency) {
+        List<Conversion> conversions = conversionRepository.findByTocurrency(tocurrency);
+        List<Conversion> filteredConversions = conversions.stream()
+                .filter(conversion -> conversion.getTocurrency().equals(tocurrency))
+                .collect(Collectors.toList());
+        return ConversionMapper.toDtoList(filteredConversions);
     }
 }
 

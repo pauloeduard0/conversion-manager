@@ -137,4 +137,25 @@ class ConversionServiceTest {
         }
     }
 
+    @Test
+    void givenCurrency_whenGetConversionsByCurrency_thenReturnConversionDtoList() {
+        String toCurrency = "USD";
+
+        List<Conversion> conversionList = new ArrayList<>();
+        conversionList.add(createConversion(500F, toCurrency, LocalDate.now(), 600F));
+        conversionList.add(createConversion(800F, "GBP", LocalDate.now(), 900F));
+
+        when(conversionRepository.findByTocurrency(toCurrency)).thenReturn(conversionList);
+
+        List<ConversionDto> result = conversionService.getConversionsByCurrency(toCurrency);
+
+        verify(conversionRepository).findByTocurrency(toCurrency);
+
+        assertEquals(1, result.size());
+        assertEquals("USD", result.get(0).to());
+        assertEquals(500F, result.get(0).amount());
+        assertEquals(600F, result.get(0).convertedAmount());
+        assertEquals(LocalDate.now(), result.get(0).date());
+    }
+
 }

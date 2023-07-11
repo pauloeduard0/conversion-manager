@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/exchange-rates")
@@ -29,7 +28,7 @@ public class ConversionController {
         this.conversionService = conversionService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<ExchangeRateResponse>> getExchangeRates() {
         List<ExchangeRateResponse> exchangeRates = conversionAdapter.getExchangeRates();
 
@@ -40,20 +39,24 @@ public class ConversionController {
         return ResponseEntity.ok(exchangeRates);
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<Page<ConversionDto>> getAllQuotes(@PageableDefault(size = 20) Pageable pageable) {
         return ResponseEntity.ok(conversionService.getAllConversions(pageable));
+    }
+
+    @GetMapping("/{tocurrency}")
+    public ResponseEntity<List<ConversionDto>> getConversionsByCurrency(@PathVariable String tocurrency) {
+        List<ConversionDto> conversions = conversionService.getConversionsByCurrency(tocurrency);
+        return ResponseEntity.ok(conversions);
     }
 
     @PostMapping
     public ResponseEntity<ConversionDto> saveConversion(@Valid @RequestBody ConversionDto conversionDto) {
 
         LocalDate currentDate = LocalDate.now();
-
         String baseCurrency = "EURO";
 
-        ConversionDto savedConversion = new ConversionDto(
-                //UUID.randomUUID(),
+        conversionDto = new ConversionDto(
                 baseCurrency,
                 conversionDto.amount(),
                 conversionDto.to(),
@@ -61,6 +64,8 @@ public class ConversionController {
                 currentDate
         );
 
-        return ResponseEntity.created(null).body(conversionService.saveConversion(savedConversion));
+        ConversionDto savedConversion = conversionService.saveConversion(conversionDto);
+
+        return ResponseEntity.created(null).body(savedConversion);
     }
 }
