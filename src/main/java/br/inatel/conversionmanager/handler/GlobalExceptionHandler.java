@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ProblemDetail handleStockNotFoundException(CurrencyNotFoundException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
-        problemDetail.setTitle("Stock Not Found for Registration");
+        problemDetail.setTitle("Currency Not Found for Registration");
         problemDetail.setType(URI.create("https://api.quotationmanagement.com/errors/not-found"));
         return problemDetail;
     }

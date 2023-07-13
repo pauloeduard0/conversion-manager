@@ -111,7 +111,7 @@ class ConversionServiceTest {
     }
 
     @Test
-    void testGetAllConversions() {
+    void givenCurrency_whenGetAllConversions_thenReturnConversionDtoList() {
         List<Conversion> conversionList = new ArrayList<>();
         conversionList.add(createConversion(500F, "USD", LocalDate.now(), 600F));
         conversionList.add(createConversion(800F, "GBP", LocalDate.now(), 900F));
