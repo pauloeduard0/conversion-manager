@@ -1,0 +1,48 @@
+version: "3.8"
+services:
+
+  mysql:
+    image: mysql
+    container_name: mysql
+    ports:
+      - 3306:3306
+      - 33060:33060
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=conversiondb
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: "/usr/bin/mysql --user=root --password=root --execute \"SHOW DATABASES;\""
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    networks:
+      - inatel
+
+  conversion-manager:
+    image: conversion-manager
+    container_name: conversion-manager
+    build:
+      dockerfile: ./Dockerfile
+      context: ./
+      args:
+        JAR_FILE: target/conversion-manager-0.0.1-SNAPSHOT.jar
+    ports:
+      - 8080:8080
+    environment:
+      - MYSQL_CONTAINER=mysql
+      - WORKOUT_MANAGER_CONTAINER=conversion-manager
+      - SPRING_PROFILES_ACTIVE=prod
+      - WORKOUT_MANAGER_PORT=8080
+      - MYSQL_PORT=3306
+    networks:
+      - inatel
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: on-failure
+
+networks:
+  inatel:
+    driver: bridge
