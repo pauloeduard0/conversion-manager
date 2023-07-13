@@ -8,7 +8,6 @@ import br.inatel.conversionmanager.repository.ConversionRepository;
 import br.inatel.conversionmanager.service.ConversionService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -27,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -44,8 +44,9 @@ class ConversionControllerIntegrationTest {
     @MockBean
     private ConversionService conversionService;
 
-    @Mock
+    @MockBean
     private ConversionRepository conversionRepository;
+
 
     private ConversionDto createConversionDto(Float amount, String to, LocalDate date, Float converted) {
         return ConversionDto.builder()
@@ -186,6 +187,29 @@ class ConversionControllerIntegrationTest {
         webTestClient.get().uri("/api/exchange-rates/all")
                 .exchange()
                 .expectStatus().isNoContent();
+    }
+
+    @Test
+    void givenConversionsExist_whenClearDatabase_thenDatabaseShouldBeEmpty() {
+        Conversion conversion1 = new Conversion();
+        conversion1.setAmount(500F);
+        conversion1.setTocurrency("USD");
+        conversion1.setDate(LocalDate.now());
+        conversion1.setConverted(600F);
+
+        Conversion conversion2 = new Conversion();
+        conversion2.setAmount(800F);
+        conversion2.setTocurrency("GBP");
+        conversion2.setDate(LocalDate.now());
+        conversion2.setConverted(900F);
+
+
+        webTestClient.delete().uri("/api/exchange-rates/clear-database")
+                .exchange()
+                .expectStatus().isOk();
+
+        List<Conversion> conversions = conversionRepository.findAll();
+        assertTrue(conversions.isEmpty());
     }
 
 
