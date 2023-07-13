@@ -1,4 +1,4 @@
-package br.inatel.conversionmanager.controller;
+package br.inatel.conversionmanager.runner;
 
 import com.intuit.karate.Results;
 import com.intuit.karate.Runner;
@@ -8,7 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("test")
 class KarateTestRunner {
 
