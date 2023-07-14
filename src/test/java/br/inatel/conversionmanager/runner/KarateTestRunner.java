@@ -14,7 +14,7 @@ class KarateTestRunner {
 
     @Test
     void runConversionControllerKarate() {
-        Results results = Runner.path("classpath:controller").tags("~@ignore").parallel(1);
+        Results results = Runner.path("classpath:controller/tests").tags("~@ignore").parallel(1);
         assertEquals(0, results.getFailCount(), results.getErrorMessages());
     }
 }
