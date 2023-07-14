@@ -24,6 +24,7 @@ public class GlobalExceptionHandler {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
         problemDetail.setTitle("Method Argument Not Valid Exception");
         problemDetail.setType(URI.create("https://api.conversionmanager.com/errors/bad-request"));
+        problemDetail.setDetail("The request contains an invalid argument. The field to or amount ,object is null, which violates the validation.");
         return problemDetail;
     }
 
