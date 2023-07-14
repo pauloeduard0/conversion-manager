@@ -22,11 +22,11 @@ Feature: Testing Post ConversionController
     And assert response != null
     And assert responseStatus == 201
     Examples:
-      | amount  | to  |
-      | 500     | USD |
-      | 600     | GBP |
-      | 700     | JPY |
-      | 800     | EUR |
+      | amount | to  |
+      | 500    | USD |
+      | 600    | GBP |
+      | 700    | JPY |
+      | 800    | EUR |
 
   Scenario Outline: Conversion successfully created with a valid currency
 
@@ -69,15 +69,3 @@ Feature: Testing Post ConversionController
       | 400    | UJJ |
       | 300    | USB |
       | 200    | UST |
-
-
-
-
-
-
-
-
-
-
-
-

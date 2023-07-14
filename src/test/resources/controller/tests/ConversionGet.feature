@@ -48,6 +48,14 @@ Feature: Testing GET ConversionController
     And match response[*].amount contains 800.0
     And match response[*].date contains '#regex \\d{4}-\\d{2}-\\d{2}'
 
+  Scenario: Retrieve Specific Currency YYY Conversion
+    Given path '/api/exchange-rates/YYY'
+    When method GET
+    Then status 200
+    And assert response != null
+    And assert responseStatus == 200
+    And match karate.sizeOf(response) == 0
+
   Scenario: Retrieve All Conversions
     Given path '/api/exchange-rates/all'
     When method GET
@@ -62,5 +70,3 @@ Feature: Testing GET ConversionController
     And assert response[0].rates != null
     And assert response[0].date != null
     And assert response[0].historical != null
-
-
