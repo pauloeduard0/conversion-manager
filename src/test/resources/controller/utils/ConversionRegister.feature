@@ -1,4 +1,4 @@
-Feature: Testing Post ConversionController
+Feature: Register a new conversion in the collection and returns its information
 
   Background:
     * url 'http://localhost:8090'

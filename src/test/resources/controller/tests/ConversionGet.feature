@@ -1,10 +1,10 @@
-Feature: Testing GET ConversionController
+Feature: Testing GET ConversionController Endpoints
 
   Background:
     * url 'http://localhost:8090'
     * def convertedCreated = callonce read('classpath:controller/tests/ConversionPost.feature@CreateCoin')
 
-  Scenario: Retrieve All Conversions
+  Scenario: Retrieve all created conversions and check status code 200, amount of conversions and data content
     Given path '/api/exchange-rates'
     When method GET
     Then status 200
@@ -17,13 +17,11 @@ Feature: Testing GET ConversionController
     And def actualBaseCurrencies = karate.map(response.content, function(item){ return item.baseCurrency })
     And def actualAmounts = karate.map(response.content, function(item){ return item.amount })
     And def actualTos = karate.map(response.content, function(item){ return item.to })
-
     And match actualBaseCurrencies == expectedBaseCurrencies
     And match karate.sort(actualAmounts) == karate.sort(expectedAmounts)
     And match karate.sort(actualTos) == karate.sort(expectedTos)
 
-
-  Scenario: Retrieve Specific Currency USD Conversion
+  Scenario: Retrieve USD only conversion and check status code 200, amount of conversions and data content
     Given path '/api/exchange-rates/USD'
     When method GET
     Then status 200
@@ -35,8 +33,7 @@ Feature: Testing GET ConversionController
     And match response[0].to == 'USD'
     And match response[0].date == '#regex \\d{4}-\\d{2}-\\d{2}'
 
-
-  Scenario: Retrieve Specific Currency GBP Conversion
+  Scenario: Retrieve GBP only conversion and check status code 200, amount of conversions and data content
     Given path '/api/exchange-rates/GBP'
     When method GET
     Then status 200
@@ -48,7 +45,7 @@ Feature: Testing GET ConversionController
     And match response[*].amount contains 800.0
     And match response[*].date contains '#regex \\d{4}-\\d{2}-\\d{2}'
 
-  Scenario: Retrieve Specific Currency YYY Conversion
+  Scenario: Retrieve YYY only conversion and check status code 200, no conversions and no data
     Given path '/api/exchange-rates/YYY'
     When method GET
     Then status 200
@@ -56,7 +53,7 @@ Feature: Testing GET ConversionController
     And assert responseStatus == 200
     And match karate.sizeOf(response) == 0
 
-  Scenario: Retrieve All Conversions
+  Scenario: Retrieve all API conversions with EURO Base, should return success equal to TRUE
     Given path '/api/exchange-rates/all'
     When method GET
     Then status 200
@@ -65,8 +62,8 @@ Feature: Testing GET ConversionController
 
     And karate.sizeOf(response.content) > 0
     And assert response[0].timestamp != null
-    And assert response[0].base != null
-    And assert response[0].success != null
+    And assert response[0].base == "EUR"
+    And assert response[0].success == true
     And assert response[0].rates != null
     And assert response[0].date != null
     And assert response[0].historical != null

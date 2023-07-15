@@ -1,4 +1,4 @@
-Feature: Testing Post ConversionController
+Feature: Testing POST ConversionController Endpoints
 
   Background:
     * url 'http://localhost:8090'
@@ -8,7 +8,7 @@ Feature: Testing Post ConversionController
     * def jsonRequestConversion = read('classpath:controller/requests/request-conversion-create.json')
 
   @CreateCoin
-  Scenario Outline: Conversion successfully created with a valid currency
+  Scenario Outline: Create new conversions should return status code 201
 
     * replace jsonRequestConversion
       | token  | value  |
@@ -28,7 +28,7 @@ Feature: Testing Post ConversionController
       | 700    | JPY |
       | 800    | EUR |
 
-  Scenario Outline: Conversion successfully created with a valid currency
+  Scenario Outline: Create new conversions with invalid quantities should return status code 400
 
     * replace jsonRequestConversion
       | token  | value  |
@@ -49,7 +49,7 @@ Feature: Testing Post ConversionController
       | @@@     | JPY |
       | KKK     | EUR |
 
-  Scenario Outline: Conversion successfully created with a valid currency
+  Scenario Outline: Create new conversions with non-existing currency should return status code 404
 
     * replace jsonRequestConversion
       | token  | value  |
