@@ -121,6 +121,18 @@ class ConversionControllerIntegrationTest {
     }
 
     @Test
+    void givenNoExchangeRatesExist_whenGetExchangeRates_thenReturnNoContentStatus() {
+        MockResponse mockResponse = new MockResponse()
+                .setResponseCode(204);
+
+        server.enqueue(mockResponse);
+
+        webTestClient.get().uri(server.url("/api/exchange-rates/all").uri())
+                .exchange()
+                .expectStatus().isNoContent();
+    }
+
+    @Test
     void givenInvalidRequest_whenSaveConversion_thenReturnBadRequestStatusAndErrorMessage() {
         MockResponse mockResponse = new MockResponse()
                 .setResponseCode(400)
