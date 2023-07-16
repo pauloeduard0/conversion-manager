@@ -35,13 +35,13 @@ public class ConversionService {
 
         List<ExchangeRateResponse> exchangeRates = conversionAdapter.getExchangeRates();
 
-        ExchangeRateResponse exchangeRate = findExchangeRateByCurrency(exchangeRates, conversion.getTocurrency());
+        ExchangeRateResponse exchangeRate = findExchangeRateByCurrency(exchangeRates, conversion.getCurrency());
 
         if (exchangeRate == null) {
             throw new CurrencyNotFoundException(conversion);
         }
 
-        float rate = exchangeRate.rates().get(conversion.getTocurrency());
+        float rate = exchangeRate.rates().get(conversion.getCurrency());
         float convertedAmount = conversion.getAmount() * rate;
         conversion.setConverted(convertedAmount);
 
@@ -61,10 +61,10 @@ public class ConversionService {
         return conversionRepository.findAll(pageable).map(ConversionMapper::toDto);
     }
 
-    public List<ConversionDto> getConversionsByCurrency(String tocurrency) {
-        List<Conversion> conversions = conversionRepository.findByTocurrency(tocurrency);
+    public List<ConversionDto> getConversionsByCurrency(String currency) {
+        List<Conversion> conversions = conversionRepository.findByCurrency(currency);
         List<Conversion> filteredConversions = conversions.stream()
-                .filter(conversion -> conversion.getTocurrency().equals(tocurrency))
+                .filter(conversion -> conversion.getCurrency().equals(currency))
                 .collect(Collectors.toList());
         return ConversionMapper.toDtoList(filteredConversions);
     }

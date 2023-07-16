@@ -45,6 +45,7 @@ class ConversionServiceTest {
 
     private ConversionDto createConversionDto(Float amount, String to, LocalDate date, Float converted) {
         return ConversionDto.builder()
+                .baseCurrency("EURO")
                 .amount(amount)
                 .to(to)
                 .convertedAmount(converted)
@@ -52,11 +53,11 @@ class ConversionServiceTest {
                 .build();
     }
 
-    private Conversion createConversion(Float amount, String tocurrency, LocalDate date, Float converted) {
+    private Conversion createConversion(Float amount, String currency, LocalDate date, Float converted) {
         return Conversion.builder()
                 .amount(amount)
                 .base("EURO")
-                .tocurrency(tocurrency)
+                .currency(currency)
                 .date(date)
                 .converted(converted)
                 .build();
@@ -81,9 +82,8 @@ class ConversionServiceTest {
         );
         when(conversionAdapter.getExchangeRates()).thenReturn(Collections.singletonList(exchangeRateResponse));
 
-        ConversionDto conversionDto = createConversionDto(500F, "USD", LocalDate.now(), null);
+        ConversionDto conversionDto = createConversionDto(500F, "USD", LocalDate.now(), 545.774f);
 
-        Conversion conversionToSave = createConversion(500F, "USD", LocalDate.now(), 545.774f);
         Conversion savedConversion = createConversion(500F, "USD", LocalDate.now(), 545.774f);
 
         when(conversionRepository.save(any(Conversion.class))).thenReturn(savedConversion);
@@ -92,7 +92,7 @@ class ConversionServiceTest {
 
         assertEquals(savedConversion.getBase(), result.baseCurrency());
         assertEquals(savedConversion.getAmount(), result.amount());
-        assertEquals(savedConversion.getTocurrency(), result.to());
+        assertEquals(savedConversion.getCurrency(), result.to());
         assertEquals(savedConversion.getConverted(), result.convertedAmount());
         assertEquals(savedConversion.getDate(), result.date());
 
@@ -131,7 +131,7 @@ class ConversionServiceTest {
 
             assertEquals(conversion.getBase(), dto.baseCurrency());
             assertEquals(conversion.getAmount(), dto.amount());
-            assertEquals(conversion.getTocurrency(), dto.to());
+            assertEquals(conversion.getCurrency(), dto.to());
             assertEquals(conversion.getConverted(), dto.convertedAmount());
             assertEquals(conversion.getDate(), dto.date());
         }
@@ -145,11 +145,11 @@ class ConversionServiceTest {
         conversionList.add(createConversion(500F, toCurrency, LocalDate.now(), 600F));
         conversionList.add(createConversion(800F, "GBP", LocalDate.now(), 900F));
 
-        when(conversionRepository.findByTocurrency(toCurrency)).thenReturn(conversionList);
+        when(conversionRepository.findByCurrency(toCurrency)).thenReturn(conversionList);
 
         List<ConversionDto> result = conversionService.getConversionsByCurrency(toCurrency);
 
-        verify(conversionRepository).findByTocurrency(toCurrency);
+        verify(conversionRepository).findByCurrency(toCurrency);
 
         assertEquals(1, result.size());
         assertEquals("USD", result.get(0).to());

@@ -49,9 +49,9 @@ public class ConversionController {
         return ResponseEntity.ok(conversionService.getAllConversions(pageable));
     }
 
-    @GetMapping("/{tocurrency}")
-    public ResponseEntity<List<ConversionDto>> getConversionsByCurrency(@PathVariable String tocurrency) {
-        List<ConversionDto> conversions = conversionService.getConversionsByCurrency(tocurrency);
+    @GetMapping("/{currency}")
+    public ResponseEntity<List<ConversionDto>> getConversionsByCurrency(@PathVariable String currency) {
+        List<ConversionDto> conversions = conversionService.getConversionsByCurrency(currency);
         return ResponseEntity.ok(conversions);
     }
 

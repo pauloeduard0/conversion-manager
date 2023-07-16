@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/currencycache")
+@RequestMapping("/clear-cache")
 public class RatesController {
 
     private final ConversionAdapter conversionAdapter;

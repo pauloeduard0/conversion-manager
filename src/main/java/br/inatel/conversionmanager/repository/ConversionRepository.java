@@ -7,5 +7,5 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ConversionRepository extends JpaRepository<Conversion, UUID> {
-    List<Conversion> findByTocurrency(String currencyId);
+    List<Conversion> findByCurrency(String currencyId);
 }

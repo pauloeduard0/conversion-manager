@@ -11,15 +11,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class DefaultConversionValidatorTest {
-
     @Mock
     private ConversionAdapter conversionAdapter;
 
@@ -50,7 +51,7 @@ class DefaultConversionValidatorTest {
         when(conversionAdapter.getExchangeRates()).thenReturn(Collections.singletonList(exchangeRateResponse));
 
         Conversion conversion = new Conversion();
-        conversion.setTocurrency("INVALID");
+        conversion.setCurrency("INVALID");
 
         assertThrows(CurrencyNotFoundException.class, () -> defaultValidator.isValid(conversion));
 
@@ -76,7 +77,7 @@ class DefaultConversionValidatorTest {
         when(conversionAdapter.getExchangeRates()).thenReturn(Collections.singletonList(exchangeRateResponse));
 
         Conversion conversion = new Conversion();
-        conversion.setTocurrency("USD");
+        conversion.setCurrency("USD");
 
         assertDoesNotThrow(() -> defaultValidator.isValid(conversion));
 
