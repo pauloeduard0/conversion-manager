@@ -1,6 +1,6 @@
 # Conversion Manager REST Application
 
-To set up and run the Quotation Management REST application, please ensure you have the following prerequisites:
+To set up and run the Conversion Manager REST application, please ensure you have the following prerequisites:
 
 - Java 17
 - Spring Boot
