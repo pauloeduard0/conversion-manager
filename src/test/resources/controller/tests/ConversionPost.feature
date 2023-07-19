@@ -2,10 +2,9 @@ Feature: Testing POST ConversionController Endpoints
 
   Background:
     * url 'http://localhost:8090'
-    * def convertConfig = { amount: 800, to: 'GBP' }
-    * def convertRegistered = callonce read('classpath:controller/utils/ConversionRegister.feature') convertConfig
     * configure afterFeature = function(){karate.call('controller/tests/ConversionDelete.feature');}
     * def jsonRequestConversion = read('classpath:controller/requests/request-conversion-create.json')
+    * header Content-Type = 'application/json'
 
   @CreateCoin
   Scenario Outline: Create new conversions should return status code 201
@@ -15,18 +14,22 @@ Feature: Testing POST ConversionController Endpoints
       | amount | amount |
       | to     | to     |
     Given request jsonRequestConversion
-    And header Content-Type = 'application/json'
     Given path '/api/exchange-rates'
     When method POST
     Then status 201
     And assert response != null
     And assert responseStatus == 201
+    And match response.baseCurrency == "EURO"
+    And match response.amount == parseInt('<amount>')
+    And match response.to == '<to>'
+    And match response.date == '#regex \\d{4}-\\d{2}-\\d{2}'
     Examples:
       | amount | to  |
       | 500    | USD |
       | 600    | GBP |
       | 700    | JPY |
       | 800    | EUR |
+      | 800    | GBP |
 
   Scenario Outline: Create new conversions with invalid quantities should return status code 400
 
@@ -35,13 +38,12 @@ Feature: Testing POST ConversionController Endpoints
       | amount | amount |
       | to     | to     |
     Given request jsonRequestConversion
-    And header Content-Type = 'application/json'
     Given path '/api/exchange-rates'
     When method POST
     Then status 400
     And assert response != null
     And assert responseStatus == 400
-    And match response == {type: 'https://api.conversionmanager.com/errors/bad-request', title: 'Invalid Format Exception', status: 400, detail: "Cannot deserialize value of type that is not a valid `Float` value",instance: '/api/exchange-rates'}
+    And match response == {type: 'https://api.conversionmanager.com/errors/bad-request', title: 'Invalid Format Exception', status: 400, detail: "Cannot deserialize value of type that is not a valid `Float` value", instance: '/api/exchange-rates'}
     Examples:
       | amount  | to  |
       | invalid | USD |
@@ -56,7 +58,6 @@ Feature: Testing POST ConversionController Endpoints
       | amount | amount |
       | to     | to     |
     Given request jsonRequestConversion
-    And header Content-Type = 'application/json'
     Given path '/api/exchange-rates'
     When method POST
     Then status 404
@@ -69,3 +70,37 @@ Feature: Testing POST ConversionController Endpoints
       | 400    | UJJ |
       | 300    | USB |
       | 200    | UST |
+
+  Scenario Outline: Create new conversions with empty to should return status code 400
+
+    * def requestPayload = { "amount": "<amount>" }
+    * replace requestPayload
+    Given request requestPayload
+    Given path '/api/exchange-rates'
+    When method POST
+    Then status 400
+    And assert response != null
+    And assert responseStatus == 400
+    And match response == {type: 'https://api.conversionmanager.com/errors/bad-request', title: 'Method Argument Not Valid Exception', status: 400, detail: "The request contains an invalid argument. The field to or amount ,object is null, which violates the validation.", instance: '/api/exchange-rates'}
+    Examples:
+      | amount |
+      | 500    |
+      | 400    |
+      | 300    |
+
+  Scenario Outline: Create new conversions with empty amount should return status code 400
+
+    * def requestPayload = { "to": "<to>" }
+    * replace requestPayload
+    Given request requestPayload
+    Given path '/api/exchange-rates'
+    When method POST
+    Then status 400
+    And assert response != null
+    And assert responseStatus == 400
+    And match response == {type: 'https://api.conversionmanager.com/errors/bad-request', title: 'Method Argument Not Valid Exception', status: 400, detail: "The request contains an invalid argument. The field to or amount ,object is null, which violates the validation.", instance: '/api/exchange-rates'}
+    Examples:
+      | to  |
+      | USD |
+      | GBP |
+      | JPY |

@@ -10,6 +10,7 @@ import java.time.LocalDate;
 public record ConversionDto(
         String baseCurrency,
         @Positive
+                @NotNull
         Float amount,
         @NotNull
         String to,
