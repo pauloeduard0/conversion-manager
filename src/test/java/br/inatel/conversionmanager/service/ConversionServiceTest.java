@@ -125,9 +125,12 @@ class ConversionServiceTest {
         assertEquals(conversionList.size(), result.getContent().size());
 
         List<ConversionDto> dtoList = result.getContent();
-        for (int i = 0; i < conversionList.size(); i++) {
-            Conversion conversion = conversionList.get(i);
-            ConversionDto dto = dtoList.get(i);
+
+        for (Conversion conversion : conversionList) {
+            ConversionDto dto = dtoList.stream()
+                    .filter(dtoItem -> dtoItem.to().equals(conversion.getCurrency()))
+                    .findFirst()
+                    .orElseThrow(AssertionError::new);
 
             assertEquals(conversion.getBase(), dto.baseCurrency());
             assertEquals(conversion.getAmount(), dto.amount());
@@ -135,6 +138,7 @@ class ConversionServiceTest {
             assertEquals(conversion.getConverted(), dto.convertedAmount());
             assertEquals(conversion.getDate(), dto.date());
         }
+
     }
 
     @Test
