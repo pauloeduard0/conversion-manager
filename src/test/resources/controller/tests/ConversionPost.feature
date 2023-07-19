@@ -29,7 +29,6 @@ Feature: Testing POST ConversionController Endpoints
       | 600    | GBP |
       | 700    | JPY |
       | 800    | EUR |
-      | 800    | GBP |
 
   Scenario Outline: Create new conversions with invalid quantities should return status code 400
 

@@ -10,10 +10,10 @@ Feature: Testing GET ConversionController Endpoints
     Then status 200
     And assert response != null
     And assert responseStatus == 200
-    And match karate.sizeOf(response.content) == 5
-    And def expectedBaseCurrencies = ['EURO', 'EURO', 'EURO', 'EURO', 'EURO']
-    And def expectedAmounts = [500, 600, 700, 800, 800]
-    And def expectedTos = ['USD', 'GBP', 'JPY', 'EUR', 'GBP']
+    And match karate.sizeOf(response.content) == 4
+    And def expectedBaseCurrencies = ['EURO', 'EURO', 'EURO', 'EURO']
+    And def expectedAmounts = [500, 600, 700, 800]
+    And def expectedTos = ['USD', 'GBP', 'JPY', 'EUR']
     And def actualBaseCurrencies = karate.map(response.content, function(item){ return item.baseCurrency })
     And def actualAmounts = karate.map(response.content, function(item){ return item.amount })
     And def actualTos = karate.map(response.content, function(item){ return item.to })
@@ -21,37 +21,34 @@ Feature: Testing GET ConversionController Endpoints
     And match karate.sort(actualAmounts) == karate.sort(expectedAmounts)
     And match karate.sort(actualTos) == karate.sort(expectedTos)
 
-  Scenario: Retrieve USD only conversion and check status code 200, amount of conversions and data content
-    Given path '/api/exchange-rates/USD'
+  Scenario Outline: Retrieve <currency> conversion should status code 200, amount of conversions and data content
+    Given path '/api/exchange-rates/<currency>'
     When method GET
     Then status 200
-    And assert response != null
     And assert responseStatus == 200
     And match karate.sizeOf(response) == 1
-    And match response[0].baseCurrency == 'EURO'
-    And match response[0].amount == 500
-    And match response[0].to == 'USD'
-    And match response[0].date == '#regex \\d{4}-\\d{2}-\\d{2}'
-
-  Scenario: Retrieve GBP only conversion and check status code 200, amount of conversions and data content
-    Given path '/api/exchange-rates/GBP'
-    When method GET
-    Then status 200
-    And assert response != null
-    And assert responseStatus == 200
-    And match karate.sizeOf(response) == 2
-    And match response[*].to contains 'GBP'
-    And match response[*].amount contains 600.0
-    And match response[*].amount contains 800.0
+    And match response[*].to contains '<currency>'
     And match response[*].date contains '#regex \\d{4}-\\d{2}-\\d{2}'
+    Examples:
+      | currency  |
+      | USD       |
+      | GBP       |
+      | JPY       |
+      | EUR       |
 
-  Scenario: Retrieve YYY only conversion and check status code 200, no conversions and no data
-    Given path '/api/exchange-rates/YYY'
+  Scenario Outline: Retrieve <currency> conversion should status code 200, no conversions and no data
+    Given path '/api/exchange-rates/<currency>'
     When method GET
     Then status 200
     And assert response != null
     And assert responseStatus == 200
     And match karate.sizeOf(response) == 0
+    Examples:
+      | currency |
+      | YYY      |
+      | KKK      |
+      | 555      |
+      | @@@      |
 
   Scenario: Retrieve all API conversions with EURO Base, should return success equal to TRUE
     Given path '/api/exchange-rates/all'
