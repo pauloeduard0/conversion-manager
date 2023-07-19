@@ -41,7 +41,7 @@ class ConversionControllerIntegrationTest {
 
         webTestClient.post().uri(server.url("/api/exchange-rates").uri())
                 .contentType(MediaType.APPLICATION_JSON)
-                .syncBody("{ \"amount\": 800, \"to\": \"USD\" }")
+                .bodyValue("{ \"amount\": 800, \"to\": \"USD\" }")
                 .exchange()
                 .expectStatus().isCreated()
                 .expectBody()
@@ -63,7 +63,7 @@ class ConversionControllerIntegrationTest {
 
         webTestClient.post().uri(server.url("/api/exchange-rates").uri())
                 .contentType(MediaType.APPLICATION_JSON)
-                .syncBody("{ \"amount\": 800, \"to\": \"KKK\" }")
+                .bodyValue("{ \"amount\": 800, \"to\": \"KKK\" }")
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody()
@@ -79,24 +79,25 @@ class ConversionControllerIntegrationTest {
         MockResponse mockResponse = new MockResponse()
                 .setResponseCode(200)
                 .setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .setBody("[\n" +
-                        "    {\n" +
-                        "        \"timestamp\": 1689338403,\n" +
-                        "        \"base\": \"EUR\",\n" +
-                        "        \"success\": true,\n" +
-                        "        \"rates\": {\n" +
-                        "            \"ANG\": 2.019441,\n" +
-                        "            \"SVC\": 9.804953,\n" +
-                        "            \"CAD\": 1.471587,\n" +
-                        "            \"XCD\": 3.030053,\n" +
-                        "            \"MVR\": 17.277676,\n" +
-                        "            \"HRK\": 7.538677,\n" +
-                        "            \"AUD\": 1.635403\n" +
-                        "        },\n" +
-                        "        \"date\": \"2023-07-14\",\n" +
-                        "        \"historical\": true\n" +
-                        "    }\n" +
-                        "]");
+                .setBody("""
+                        [
+                            {
+                                "timestamp": 1689338403,
+                                "base": "EUR",
+                                "success": true,
+                                "rates": {
+                                    "ANG": 2.019441,
+                                    "SVC": 9.804953,
+                                    "CAD": 1.471587,
+                                    "XCD": 3.030053,
+                                    "MVR": 17.277676,
+                                    "HRK": 7.538677,
+                                    "AUD": 1.635403
+                                },
+                                "date": "2023-07-14",
+                                "historical": true
+                            }
+                        ]""");
 
         server.enqueue(mockResponse);
 
@@ -143,7 +144,7 @@ class ConversionControllerIntegrationTest {
 
         webTestClient.post().uri(server.url("/api/exchange-rates").uri())
                 .contentType(MediaType.APPLICATION_JSON)
-                .syncBody("{ \"amount\": \"invalid\", \"to\": \"USD\" }")
+                .bodyValue("{ \"amount\": \"invalid\", \"to\": \"USD\" }")
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody()
