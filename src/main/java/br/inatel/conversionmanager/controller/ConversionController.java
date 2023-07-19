@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class ConversionController {
 
         ConversionDto savedConversion = conversionService.saveConversion(conversionDto);
 
-        return ResponseEntity.created(null).body(savedConversion);
+        return ResponseEntity.created(URI.create("")).body(savedConversion);
     }
 
     @Transactional
