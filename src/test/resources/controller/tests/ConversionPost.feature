@@ -2,7 +2,8 @@ Feature: Testing POST ConversionController Endpoints
 
   Background:
     * url 'http://localhost:8090'
-    * configure afterFeature = function(){karate.call('controller/tests/ConversionDelete.feature');}
+    * path '/api/exchange-rates'
+    * configure afterFeature = function(){karate.call('../utils/ConversionDelete.feature');}
     * def jsonRequestConversion = read('classpath:controller/requests/request-conversion-create.json')
     * header Content-Type = 'application/json'
 
@@ -14,7 +15,6 @@ Feature: Testing POST ConversionController Endpoints
       | amount | amount |
       | to     | to     |
     Given request jsonRequestConversion
-    Given path '/api/exchange-rates'
     When method POST
     Then status 201
     And assert response != null
@@ -37,7 +37,6 @@ Feature: Testing POST ConversionController Endpoints
       | amount | amount |
       | to     | to     |
     Given request jsonRequestConversion
-    Given path '/api/exchange-rates'
     When method POST
     Then status 400
     And assert response != null
@@ -57,7 +56,6 @@ Feature: Testing POST ConversionController Endpoints
       | amount | amount |
       | to     | to     |
     Given request jsonRequestConversion
-    Given path '/api/exchange-rates'
     When method POST
     Then status 404
     And assert response != null
@@ -75,7 +73,6 @@ Feature: Testing POST ConversionController Endpoints
     * def requestPayload = { "amount": "<amount>" }
     * replace requestPayload
     Given request requestPayload
-    Given path '/api/exchange-rates'
     When method POST
     Then status 400
     And assert response != null
@@ -92,7 +89,6 @@ Feature: Testing POST ConversionController Endpoints
     * def requestPayload = { "to": "<to>" }
     * replace requestPayload
     Given request requestPayload
-    Given path '/api/exchange-rates'
     When method POST
     Then status 400
     And assert response != null
