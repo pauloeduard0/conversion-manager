@@ -20,7 +20,7 @@ public class DefaultConversionValidator implements DefaultValidator {
 
         if (conversionAdapter.getExchangeRates().stream()
                 .noneMatch(exchangeRate -> exchangeRate.rates().containsKey(toCurrency.substring(0, 3)))) {
-            throw new CurrencyNotFoundException(conversion);
+            throw new CurrencyNotFoundException(toCurrency);
         }
     }
 }
