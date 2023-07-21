@@ -8,65 +8,80 @@ import br.inatel.conversionmanager.model.dto.ExchangeRateResponse;
 import br.inatel.conversionmanager.model.entities.Conversion;
 import br.inatel.conversionmanager.repository.ConversionRepository;
 import br.inatel.conversionmanager.service.validation.DefaultValidator;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ConversionService {
 
     private final ConversionRepository conversionRepository;
-    private final List<DefaultValidator> listCurrency;
+    private final List<DefaultValidator> listCurrencyValidator;
     private final ConversionAdapter conversionAdapter;
 
-    public ConversionService(ConversionRepository conversionRepository, List<DefaultValidator> listCurrency, ConversionAdapter conversionAdapter) {
+    public ConversionService(ConversionRepository conversionRepository, List<DefaultValidator> listCurrencyValidator, ConversionAdapter conversionAdapter) {
         this.conversionRepository = conversionRepository;
-        this.listCurrency = listCurrency;
+        this.listCurrencyValidator = listCurrencyValidator;
         this.conversionAdapter = conversionAdapter;
     }
 
     public ConversionDto saveConversion(ConversionDto conversionDto) {
-        Conversion conversion = ConversionMapper.toEntity(conversionDto);
+        LocalDate currentDate = LocalDate.now();
+        String baseCurrency = "EURO";
 
-        listCurrency.forEach(currencyVal -> currencyVal.isValid(conversion));
+        BigDecimal exchangeRate = findExchangeRateByCurrency(conversionAdapter.getExchangeRates(), conversionDto.to());
 
-        List<ExchangeRateResponse> exchangeRates = conversionAdapter.getExchangeRates();
+        BigDecimal convertedAmount = conversionDto.amount().multiply(exchangeRate).setScale(5, RoundingMode.HALF_UP);
 
-        ExchangeRateResponse exchangeRate = findExchangeRateByCurrency(exchangeRates, conversion.getCurrency());
+        Conversion conversion = ConversionMapper.toEntity(new ConversionDto(
+                baseCurrency,
+                conversionDto.amount(),
+                conversionDto.to(),
+                convertedAmount,
+                currentDate
+        ));
 
-        if (exchangeRate == null) {
-            throw new CurrencyNotFoundException(conversion);
-        }
-
-        float rate = exchangeRate.rates().get(conversion.getCurrency());
-        float convertedAmount = conversion.getAmount() * rate;
-        conversion.setConverted(convertedAmount);
+        listCurrencyValidator.forEach(currencyVal -> currencyVal.isValid(conversion));
 
         Conversion savedConversion = conversionRepository.save(conversion);
 
         return ConversionMapper.toDto(savedConversion);
     }
 
-    private ExchangeRateResponse findExchangeRateByCurrency(List<ExchangeRateResponse> exchangeRates, String currency) {
-        return exchangeRates.stream()
-                .filter(exchangeRate -> exchangeRate.rates().containsKey(currency))
-                .findFirst()
-                .orElse(null);
+    public List<ExchangeRateResponse> getAllCurrency() {
+        List<ExchangeRateResponse> exchangeRates = conversionAdapter.getExchangeRates();
+
+        if (exchangeRates.isEmpty()) {
+            return List.of();
+        }
+
+        return exchangeRates;
     }
 
-    public Page<ConversionDto> getAllConversions(Pageable pageable) {
-        return conversionRepository.findAll(pageable).map(ConversionMapper::toDto);
+    public List<ConversionDto> getAllConversions() {
+        List<Conversion> conversions = conversionRepository.findAll();
+        return conversions.stream()
+                .map(ConversionMapper::toDto)
+                .toList();
     }
 
     public List<ConversionDto> getConversionsByCurrency(String currency) {
         List<Conversion> conversions = conversionRepository.findByCurrency(currency);
         List<Conversion> filteredConversions = conversions.stream()
                 .filter(conversion -> conversion.getCurrency().equals(currency))
-                .collect(Collectors.toList());
+                .toList();
         return ConversionMapper.toDtoList(filteredConversions);
     }
-}
 
+    private BigDecimal findExchangeRateByCurrency(List<ExchangeRateResponse> exchangeRates, String currency) {
+        return exchangeRates.stream()
+                .filter(exchangeRate -> exchangeRate.rates().containsKey(currency))
+                .findFirst()
+                .map(exchangeRate -> exchangeRate.rates().get(currency))
+                .orElseThrow(() -> new CurrencyNotFoundException(currency));
+    }
+
+}
