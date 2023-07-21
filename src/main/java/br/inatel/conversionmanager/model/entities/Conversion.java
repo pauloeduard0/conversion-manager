@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -24,11 +25,11 @@ public class Conversion {
 
     private String base;
 
-    private Float amount;
+    private BigDecimal amount;
 
     private String currency;
 
-    private Float converted;
+    private BigDecimal converted;
 
     @JsonFormat(pattern = "YYYY-MM-DD")
     private LocalDate date;
