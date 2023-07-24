@@ -3,7 +3,6 @@ Feature: Testing POST ConversionController Endpoints
   Background:
     * url 'http://localhost:8090'
     * path '/api/exchange-rates'
-    * configure afterFeature = function(){karate.call('../utils/ConversionDelete.feature');}
     * def jsonRequestConversion = read('classpath:controller/requests/request-conversion-create.json')
     * header Content-Type = 'application/json'
 

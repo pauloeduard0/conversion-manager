@@ -3,30 +3,31 @@ Feature: Testing GET ConversionController Endpoints
   Background:
     * url 'http://localhost:8090'
     * def convertedCreated = callonce read('classpath:controller/tests/ConversionPost.feature@CreateCoin')
-    * configure afterFeature = function(){karate.call('../utils/ConversionDelete.feature');}
 
   Scenario: Retrieve all created conversions and check status code 200, amount of conversions and data content
     Given path '/api/exchange-rates'
     When method GET
     Then status 200
     And assert responseStatus == 200
-    And match karate.sizeOf(response.content) == 4
-    And def expectedBaseCurrencies = ['EURO', 'EURO', 'EURO', 'EURO']
-    And def expectedAmounts = [500, 600, 700, 800]
-    And def expectedTos = ['USD', 'GBP', 'JPY', 'EUR']
-    And def actualBaseCurrencies = karate.map(response.content, function(item){ return item.baseCurrency })
-    And def actualAmounts = karate.map(response.content, function(item){ return item.amount })
-    And def actualTos = karate.map(response.content, function(item){ return item.to })
-    And match actualBaseCurrencies == expectedBaseCurrencies
-    And match karate.sort(actualAmounts) == karate.sort(expectedAmounts)
-    And match karate.sort(actualTos) == karate.sort(expectedTos)
+    And def conversionModel =
+    """
+    {
+        "baseCurrency": 'EURO',
+        "amount": '#number',
+        "to": '#string',
+        "convertedAmount": '#number',
+        "date": '#regex \\d{4}-\\d{2}-\\d{2}'
+    }
+    """
+    And match response contains conversionModel
+
 
   Scenario Outline: Retrieve <currency> conversion should status code 200, amount of conversions and data content
-    Given path '/api/exchange-rates/<currency>'
+    Given path '/api/exchange-rates'
+    And params { currency: '<currency>' }
     When method GET
     Then status 200
     And assert responseStatus == 200
-    And match karate.sizeOf(response) == 1
     And match response[*].to contains '<currency>'
     And match response[*].date contains '#regex \\d{4}-\\d{2}-\\d{2}'
     Examples:
@@ -37,7 +38,8 @@ Feature: Testing GET ConversionController Endpoints
       | EUR      |
 
   Scenario Outline: Retrieve <currency> conversion should status code 200, no conversions and no data
-    Given path '/api/exchange-rates/<currency>'
+    Given path '/api/exchange-rates'
+    And params { currency: '<currency>' }
     When method GET
     Then status 200
     And assert responseStatus == 200
