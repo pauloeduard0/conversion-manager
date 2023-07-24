@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Map;
 
@@ -39,11 +40,11 @@ class DefaultConversionValidatorTest {
                 "EUR",
                 true,
                 Map.of(
-                        "ANG", 1.968256f,
-                        "SVC", 9.555569f,
-                        "CAD", 1.44658f,
-                        "XCD", 2.949964f,
-                        "USD", 1.091548f
+                        "ANG", new BigDecimal("1.968256"),
+                        "SVC", new BigDecimal("9.555569"),
+                        "CAD", new BigDecimal("1.44658"),
+                        "XCD", new BigDecimal("2.949964"),
+                        "USD", new BigDecimal("1.091548")
                 ),
                 "2023-06-28",
                 true
@@ -65,11 +66,11 @@ class DefaultConversionValidatorTest {
                 "EUR",
                 true,
                 Map.of(
-                        "ANG", 1.968256f,
-                        "SVC", 9.555569f,
-                        "CAD", 1.44658f,
-                        "XCD", 2.949964f,
-                        "USD", 1.091548f
+                        "ANG", new BigDecimal("1.968256"),
+                        "SVC", new BigDecimal("9.555569"),
+                        "CAD", new BigDecimal("1.44658"),
+                        "XCD", new BigDecimal("2.949964"),
+                        "USD", new BigDecimal("1.091548")
                 ),
                 "2023-06-28",
                 true

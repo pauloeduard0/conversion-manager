@@ -14,10 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,7 +40,7 @@ class ConversionServiceTest {
     @InjectMocks
     private ConversionService conversionService;
 
-    private ConversionDto createConversionDto(Float amount, String to, LocalDate date, Float converted) {
+    private ConversionDto createConversionDto(BigDecimal amount, String to, LocalDate date, BigDecimal converted) {
         return ConversionDto.builder()
                 .baseCurrency("EURO")
                 .amount(amount)
@@ -52,7 +50,7 @@ class ConversionServiceTest {
                 .build();
     }
 
-    private Conversion createConversion(Float amount, String currency, LocalDate date, Float converted) {
+    private Conversion createConversion(BigDecimal amount, String currency, LocalDate date, BigDecimal converted) {
         return Conversion.builder()
                 .amount(amount)
                 .base("EURO")
@@ -70,20 +68,20 @@ class ConversionServiceTest {
                 "EUR",
                 true,
                 Map.of(
-                        "ANG", 1.968256f,
-                        "SVC", 9.555569f,
-                        "CAD", 1.44658f,
-                        "XCD", 2.949964f,
-                        "USD", 1.091548f
+                        "ANG", new BigDecimal("1.968256"),
+                        "SVC", new BigDecimal("9.555569"),
+                        "CAD", new BigDecimal("1.44658"),
+                        "XCD", new BigDecimal("2.949964"),
+                        "USD", new BigDecimal("1.091548")
                 ),
                 "2023-06-28",
                 true
         );
         when(conversionAdapter.getExchangeRates()).thenReturn(Collections.singletonList(exchangeRateResponse));
 
-        ConversionDto conversionDto = createConversionDto(500F, "USD", LocalDate.now(), 545.774f);
+        ConversionDto conversionDto = createConversionDto(new BigDecimal(500), "USD", LocalDate.now(), new BigDecimal("545.774"));
 
-        Conversion savedConversion = createConversion(500F, "USD", LocalDate.now(), 545.774f);
+        Conversion savedConversion = createConversion(new BigDecimal(500), "USD", LocalDate.now(), new BigDecimal("545.774"));
 
         when(conversionRepository.save(any(Conversion.class))).thenReturn(savedConversion);
 
@@ -102,7 +100,7 @@ class ConversionServiceTest {
     void givenInvalidCurrency_whenSaving_thenThrowCurrencyNotFoundException() {
         when(conversionAdapter.getExchangeRates()).thenReturn(Collections.emptyList());
 
-        ConversionDto conversionDto = createConversionDto(500F, "INVALID", LocalDate.now(), 0F);
+        ConversionDto conversionDto = createConversionDto(new BigDecimal(500), "INVALID", LocalDate.now(), new BigDecimal(0));
 
         assertThrows(CurrencyNotFoundException.class, () -> conversionService.saveConversion(conversionDto));
 
@@ -112,18 +110,16 @@ class ConversionServiceTest {
     @Test
     void givenCurrency_whenGetAllConversions_thenReturnConversionDtoList() {
         List<Conversion> conversionList = new ArrayList<>();
-        conversionList.add(createConversion(500F, "USD", LocalDate.now(), 600F));
-        conversionList.add(createConversion(800F, "GBP", LocalDate.now(), 900F));
+        conversionList.add(createConversion(new BigDecimal(500), "USD", LocalDate.now(), new BigDecimal(600)));
+        conversionList.add(createConversion(new BigDecimal(800), "GBP", LocalDate.now(), new BigDecimal(900)));
 
-        when(conversionRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(conversionList));
+        when(conversionRepository.findAll()).thenReturn(conversionList);
 
-        Page<ConversionDto> result = conversionService.getAllConversions(Pageable.unpaged());
+        List<ConversionDto> dtoList = conversionService.getAllConversions();
 
-        verify(conversionRepository).findAll(any(Pageable.class));
+        verify(conversionRepository).findAll();
 
-        assertEquals(conversionList.size(), result.getContent().size());
-
-        List<ConversionDto> dtoList = result.getContent();
+        assertEquals(conversionList.size(), dtoList.size());
 
         for (Conversion conversion : conversionList) {
             ConversionDto dto = dtoList.stream()
@@ -137,16 +133,16 @@ class ConversionServiceTest {
             assertEquals(conversion.getConverted(), dto.convertedAmount());
             assertEquals(conversion.getDate(), dto.date());
         }
-
     }
+
 
     @Test
     void givenCurrency_whenGetConversionsByCurrency_thenReturnConversionDtoList() {
         String toCurrency = "USD";
 
         List<Conversion> conversionList = new ArrayList<>();
-        conversionList.add(createConversion(500F, toCurrency, LocalDate.now(), 600F));
-        conversionList.add(createConversion(800F, "GBP", LocalDate.now(), 900F));
+        conversionList.add(createConversion(new BigDecimal(500), toCurrency, LocalDate.now(), new BigDecimal(600)));
+        conversionList.add(createConversion(new BigDecimal(800), "GBP", LocalDate.now(), new BigDecimal(900)));
 
         when(conversionRepository.findByCurrency(toCurrency)).thenReturn(conversionList);
 
@@ -156,8 +152,8 @@ class ConversionServiceTest {
 
         assertEquals(1, result.size());
         assertEquals("USD", result.get(0).to());
-        assertEquals(500F, result.get(0).amount());
-        assertEquals(600F, result.get(0).convertedAmount());
+        assertEquals(new BigDecimal("500"), result.get(0).amount());
+        assertEquals(new BigDecimal("600"), result.get(0).convertedAmount());
         assertEquals(LocalDate.now(), result.get(0).date());
     }
 
