@@ -1,17 +1,15 @@
 package br.inatel.conversionmanager.adapter;
 
+import br.inatel.conversionmanager.exception.CurrencyConversionException;
 import br.inatel.conversionmanager.model.dto.ExchangeRateResponse;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -20,13 +18,10 @@ public class ConversionAdapter {
 
     @Value("${api.conversion.host}")
     private final String currencyHost;
-
     @Value("${api.conversion.key}")
     private final String currencyKey;
-
     @Value("${api.conversion.base}")
     private final String currencyBaseUrl;
-
     private final WebClient webClient;
 
     public ConversionAdapter(
@@ -58,13 +53,13 @@ public class ConversionAdapter {
             List<ExchangeRateResponse> exchangeRates = new ArrayList<>();
             exchangeRates.add(response);
             return exchangeRates;
+        } else {
+            throw new CurrencyConversionException(this.currencyBaseUrl);
         }
-
-        return Collections.emptyList();
     }
 
-    @CacheEvict("exchangeRates")
-    public void clearCurrencyCache() {
-        log.info("Cache cleared");
-    }
+//    @CacheEvict(value = "exchangeRates", allEntries = true)
+//    public void clearCurrencyCache() {
+//        log.info("Cache cleared");
+//    }
 }
