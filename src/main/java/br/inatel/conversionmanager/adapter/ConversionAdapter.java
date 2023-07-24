@@ -57,9 +57,4 @@ public class ConversionAdapter {
             throw new CurrencyConversionException(this.currencyBaseUrl);
         }
     }
-
-//    @CacheEvict(value = "exchangeRates", allEntries = true)
-//    public void clearCurrencyCache() {
-//        log.info("Cache cleared");
-//    }
 }
