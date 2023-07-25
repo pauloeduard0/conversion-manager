@@ -16,24 +16,16 @@ import java.util.List;
 @Slf4j
 public class ConversionAdapter {
 
-    @Value("${api.conversion.host}")
-    private final String currencyHost;
-    @Value("${api.conversion.key}")
-    private final String currencyKey;
-    @Value("${api.conversion.base}")
-    private final String currencyBaseUrl;
     private final WebClient webClient;
+    @Value("${api.conversion.host}")
+    private String currencyHost;
+    @Value("${api.conversion.base}")
+    private String currencyBaseUrl;
+    @Value("${api.conversion.key}")
+    private String currencyKey;
 
-    public ConversionAdapter(
-            @Value("${api.conversion.base}") String currencyBaseUrl,
-            @Value("${api.conversion.key}") String currencyKey,
-            @Value("${api.conversion.host}") String currencyHost
-    ) {
-        this.currencyHost = currencyHost;
-        this.currencyKey = currencyKey;
-        this.currencyBaseUrl = currencyBaseUrl;
+    public ConversionAdapter() {
         this.webClient = WebClient.builder()
-                .baseUrl(currencyBaseUrl)
                 .build();
     }
 
