@@ -52,13 +52,7 @@ public class ConversionService {
     }
 
     public List<ExchangeRateResponse> getAllCurrency() {
-        List<ExchangeRateResponse> exchangeRates = conversionAdapter.getExchangeRates();
-
-        if (exchangeRates.isEmpty()) {
-            return List.of();
-        }
-
-        return exchangeRates;
+        return conversionAdapter.getExchangeRates();
     }
 
     public List<ConversionDto> getAllConversions() {
