@@ -1,7 +1,6 @@
 package br.inatel.conversionmanager.adapter;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,8 +13,11 @@ import java.util.Objects;
 @EnableScheduling
 public class CacheManagerService {
 
-    @Autowired
     CacheManager cacheManager;
+
+    public CacheManagerService(CacheManager cacheManager) {
+        this.cacheManager = cacheManager;
+    }
 
     public void evictAllCaches() {
         cacheManager.getCacheNames()
@@ -27,5 +29,4 @@ public class CacheManagerService {
         evictAllCaches();
         log.info("Cache cleared");
     }
-
 }
