@@ -6,7 +6,6 @@ import br.inatel.conversionmanager.model.dto.ConversionDto;
 import br.inatel.conversionmanager.model.dto.ExchangeRateResponse;
 import br.inatel.conversionmanager.model.entities.Conversion;
 import br.inatel.conversionmanager.repository.ConversionRepository;
-import br.inatel.conversionmanager.service.validation.DefaultValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -30,8 +29,6 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 class ConversionServiceTest {
 
-    @Mock
-    List<DefaultValidator> defaultValidatorList;
     @Mock
     private ConversionRepository conversionRepository;
     @Mock
@@ -156,5 +153,4 @@ class ConversionServiceTest {
         assertEquals(new BigDecimal("600"), result.get(0).convertedAmount());
         assertEquals(LocalDate.now(), result.get(0).date());
     }
-
 }

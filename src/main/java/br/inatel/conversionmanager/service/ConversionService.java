@@ -7,7 +7,6 @@ import br.inatel.conversionmanager.model.dto.ConversionDto;
 import br.inatel.conversionmanager.model.dto.ExchangeRateResponse;
 import br.inatel.conversionmanager.model.entities.Conversion;
 import br.inatel.conversionmanager.repository.ConversionRepository;
-import br.inatel.conversionmanager.service.validation.DefaultValidator;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,12 +18,10 @@ import java.util.List;
 public class ConversionService {
 
     private final ConversionRepository conversionRepository;
-    private final List<DefaultValidator> listCurrencyValidator;
     private final ConversionAdapter conversionAdapter;
 
-    public ConversionService(ConversionRepository conversionRepository, List<DefaultValidator> listCurrencyValidator, ConversionAdapter conversionAdapter) {
+    public ConversionService(ConversionRepository conversionRepository, ConversionAdapter conversionAdapter) {
         this.conversionRepository = conversionRepository;
-        this.listCurrencyValidator = listCurrencyValidator;
         this.conversionAdapter = conversionAdapter;
     }
 
@@ -43,8 +40,6 @@ public class ConversionService {
                 convertedAmount,
                 currentDate
         ));
-
-        listCurrencyValidator.forEach(currencyVal -> currencyVal.isValid(conversion));
 
         Conversion savedConversion = conversionRepository.save(conversion);
 
@@ -77,5 +72,4 @@ public class ConversionService {
                 .map(exchangeRate -> exchangeRate.rates().get(currency))
                 .orElseThrow(() -> new CurrencyNotFoundException(currency));
     }
-
 }
