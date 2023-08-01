@@ -29,13 +29,12 @@ public class RequestFilter extends OncePerRequestFilter {
         filterChain.doFilter(requestWrapper, responseWrapper);
 
         String requestBody = this.getContentAsString(requestWrapper.getContentAsByteArray(), request.getCharacterEncoding());
-        if (requestBody.length() > 0) {
+        if (!requestBody.isEmpty()) {
             log.info("Request body:\n{}", requestBody);
         }
 
         String responseBody = this.getContentAsString(responseWrapper.getContentAsByteArray(), response.getCharacterEncoding());
-        boolean includeResponsePayload = true;
-        if (responseBody.length() > 0 && includeResponsePayload) {
+        if (!responseBody.isEmpty()) {
             log.info("Response body:\n{}", responseBody);
         }
         responseWrapper.copyBodyToResponse();
@@ -47,5 +46,4 @@ public class RequestFilter extends OncePerRequestFilter {
         }
         return new String(contentAsByteArray, 0, contentAsByteArray.length, characterEncoding);
     }
-
 }
