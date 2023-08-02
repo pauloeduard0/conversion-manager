@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
         problemDetail.setTitle("Invalid Format Exception");
         problemDetail.setType(URI.create("https://api.conversionmanager.com/errors/bad-request"));
-        problemDetail.setDetail("Cannot deserialize value of type that is not a valid `Float` value");
+        problemDetail.setDetail("Cannot deserialize value of type that is not a valid `Double` value");
         return problemDetail;
     }
 
