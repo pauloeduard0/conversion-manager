@@ -1,5 +1,6 @@
 package br.inatel.conversionmanager.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Builder;
@@ -16,6 +17,7 @@ public record ConversionDto(
         @NotNull
         String to,
         BigDecimal convertedAmount,
+        @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate date
 
 ) {
