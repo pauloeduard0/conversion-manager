@@ -40,7 +40,7 @@ Feature: Testing POST ConversionController Endpoints
     Then status 400
     And assert response != null
     And assert responseStatus == 400
-    And match response == {type: 'https://api.conversionmanager.com/errors/bad-request', title: 'Invalid Format Exception', status: 400, detail: "Cannot deserialize value of type that is not a valid `Float` value", instance: '/api/exchange-rates'}
+    And match response == {type: 'https://api.conversionmanager.com/errors/bad-request', title: 'Invalid Format Exception', status: 400, detail: "Cannot deserialize value of type that is not a valid `Double` value", instance: '/api/exchange-rates'}
     Examples:
       | amount  | to  |
       | invalid | USD |

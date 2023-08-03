@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.*;
-import org.springframework.boot.jackson.JsonComponent;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -16,7 +15,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-@JsonComponent
 public class MyJsonComponent {
 
     // Serializer for ConversionDto
