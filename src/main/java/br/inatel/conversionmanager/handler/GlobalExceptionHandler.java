@@ -51,7 +51,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(value = HttpStatus.SERVICE_UNAVAILABLE)
     public ProblemDetail handleCurrencyConversionException(CurrencyConversionException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
-        problemDetail.setTitle("Stock Manager Connection Exception");
+        problemDetail.setTitle("Currency API Connection Exception");
         problemDetail.setType(URI.create("https://api.api.conversionmanager.com/errors/service-unavailable"));
         return problemDetail;
     }
