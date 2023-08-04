@@ -16,7 +16,6 @@ Feature: Testing POST ConversionController Endpoints
     Given request jsonRequestConversion
     When method POST
     Then status 201
-    And assert response != null
     And assert responseStatus == 201
     And match response.id == '#regex (?i)^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$'
     And match response.baseCurrency == "EURO"
