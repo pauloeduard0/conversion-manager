@@ -12,6 +12,7 @@ Feature: Testing GET ConversionController Endpoints
     And def conversionModel =
     """
     {
+        "id": '#regex (?i)^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$',
         "baseCurrency": 'EURO',
         "amount": '#number',
         "to": '#string',

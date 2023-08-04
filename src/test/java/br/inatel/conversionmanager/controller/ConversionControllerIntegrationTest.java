@@ -25,6 +25,7 @@ import java.net.InetAddress;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @SpringJUnitConfig
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -88,7 +89,10 @@ class ConversionControllerIntegrationTest {
 
     @Test
     void givenValidRequest_whenSaveConversion_thenReturnCreatedStatusAndSavedConversion() throws JsonProcessingException {
-        ConversionDto conversionDto = new ConversionDto("EURO", BigDecimal.valueOf(800.0), "USD", BigDecimal.valueOf(896.9464), LocalDate.parse("2023-07-14"));
+        UUID id = UUID.fromString("24bd7ae7-25ab-45f7-9e94-37c72d62cbe0");
+        ConversionDto conversionDto = new ConversionDto(
+                id, "EURO", BigDecimal.valueOf(800.0), "USD", BigDecimal.valueOf(896.9464), LocalDate.parse("2023-07-14")
+        );
 
         ObjectMapper mapper = new ObjectMapper();
         JavaTimeModule javaTimeModule = new JavaTimeModule();
@@ -108,6 +112,7 @@ class ConversionControllerIntegrationTest {
                 .exchange()
                 .expectStatus().isCreated()
                 .expectBody()
+                .jsonPath("$.id").isEqualTo("24bd7ae7-25ab-45f7-9e94-37c72d62cbe0")
                 .jsonPath("$.baseCurrency").isEqualTo("EURO")
                 .jsonPath("$.amount").isEqualTo(800.0)
                 .jsonPath("$.to").isEqualTo("USD")

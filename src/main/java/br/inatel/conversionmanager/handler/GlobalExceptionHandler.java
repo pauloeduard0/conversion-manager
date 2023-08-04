@@ -1,5 +1,6 @@
 package br.inatel.conversionmanager.handler;
 
+import br.inatel.conversionmanager.exception.ConversionNotFoundException;
 import br.inatel.conversionmanager.exception.CurrencyConversionException;
 import br.inatel.conversionmanager.exception.CurrencyNotFoundException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -30,16 +31,25 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CurrencyNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ProblemDetail handleStockNotFoundException(CurrencyNotFoundException e) {
+    public ProblemDetail handleCurrencyNotFoundException(CurrencyNotFoundException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
         problemDetail.setTitle("Currency Not Found for Registration");
         problemDetail.setType(URI.create("https://api.api.conversionmanager.com/errors/not-found"));
         return problemDetail;
     }
 
+    @ExceptionHandler(ConversionNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ProblemDetail handleConversionNotFoundException(ConversionNotFoundException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
+        problemDetail.setTitle("Conversion Not Found in Database");
+        problemDetail.setType(URI.create("https://api.api.conversionmanager.com/errors/not-found"));
+        return problemDetail;
+    }
+
     @ExceptionHandler(CurrencyConversionException.class)
     @ResponseStatus(value = HttpStatus.SERVICE_UNAVAILABLE)
-    public ProblemDetail handleStockManagerConnectionException(CurrencyConversionException e) {
+    public ProblemDetail handleCurrencyConversionException(CurrencyConversionException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         problemDetail.setTitle("Stock Manager Connection Exception");
         problemDetail.setType(URI.create("https://api.api.conversionmanager.com/errors/service-unavailable"));

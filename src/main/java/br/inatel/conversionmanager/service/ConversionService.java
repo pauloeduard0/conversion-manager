@@ -1,6 +1,7 @@
 package br.inatel.conversionmanager.service;
 
 import br.inatel.conversionmanager.adapter.ConversionAdapter;
+import br.inatel.conversionmanager.exception.ConversionNotFoundException;
 import br.inatel.conversionmanager.exception.CurrencyNotFoundException;
 import br.inatel.conversionmanager.mapper.ConversionMapper;
 import br.inatel.conversionmanager.model.dto.ConversionDto;
@@ -13,6 +14,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ConversionService {
@@ -34,6 +37,7 @@ public class ConversionService {
         BigDecimal convertedAmount = conversionDto.amount().multiply(exchangeRate).setScale(5, RoundingMode.HALF_UP);
 
         Conversion conversion = ConversionMapper.toEntity(new ConversionDto(
+                null,
                 baseCurrency,
                 conversionDto.amount(),
                 conversionDto.to(),
@@ -63,6 +67,16 @@ public class ConversionService {
                 .filter(conversion -> conversion.getCurrency().equals(currency))
                 .toList();
         return ConversionMapper.toDtoList(filteredConversions);
+    }
+
+    public ConversionDto getConversionById(UUID id) {
+        Optional<Conversion> optionalConversion = conversionRepository.findById(id);
+        if (optionalConversion.isPresent()) {
+            Conversion conversion = optionalConversion.get();
+            return ConversionMapper.toDto(conversion);
+        } else {
+            throw new ConversionNotFoundException(id);
+        }
     }
 
     private BigDecimal findExchangeRateByCurrency(List<ExchangeRateResponse> exchangeRates, String currency) {

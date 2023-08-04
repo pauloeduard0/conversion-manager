@@ -18,6 +18,7 @@ Feature: Testing POST ConversionController Endpoints
     Then status 201
     And assert response != null
     And assert responseStatus == 201
+    And match response.id == '#regex (?i)^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$'
     And match response.baseCurrency == "EURO"
     And match response.amount == parseInt('<amount>')
     And match response.to == '<to>'

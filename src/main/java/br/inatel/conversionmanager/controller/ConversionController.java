@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/exchange-rates")
@@ -26,8 +27,11 @@ public class ConversionController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<ConversionDto>> getConversions(@RequestParam(required = false) String currency) {
-        if (currency != null) {
+    public ResponseEntity<?> getConversions(@RequestParam(required = false) UUID id, @RequestParam(required = false) String currency) {
+        if (id != null) {
+            ConversionDto conversion = conversionService.getConversionById(id);
+            return ResponseEntity.ok(conversion);
+        } else if (currency != null) {
             List<ConversionDto> conversions = conversionService.getConversionsByCurrency(currency);
             return ResponseEntity.ok(conversions);
         } else {

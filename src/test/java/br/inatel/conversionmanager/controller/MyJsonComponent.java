@@ -14,15 +14,16 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.UUID;
 
 public class MyJsonComponent {
 
-    // Serializer for ConversionDto
     public static class ConversionDtoSerializer extends JsonSerializer<ConversionDto> {
 
         @Override
         public void serialize(ConversionDto value, JsonGenerator jgen, SerializerProvider serializers) throws IOException {
             jgen.writeStartObject();
+            jgen.writeStringField("id", value.id().toString());
             jgen.writeStringField("baseCurrency", value.baseCurrency());
             jgen.writeNumberField("amount", value.amount());
             jgen.writeStringField("to", value.to());
@@ -32,23 +33,22 @@ public class MyJsonComponent {
         }
     }
 
-    // Deserializer for ConversionDto
     public static class ConversionDtoDeserializer extends JsonDeserializer<ConversionDto> {
 
         @Override
         public ConversionDto deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
             ObjectCodec codec = jsonParser.getCodec();
             JsonNode tree = codec.readTree(jsonParser);
+            UUID id = UUID.fromString(tree.get("id").textValue());
             String baseCurrency = tree.get("baseCurrency").textValue();
             BigDecimal amount = tree.get("amount").decimalValue();
             String to = tree.get("to").textValue();
             BigDecimal convertedAmount = tree.get("convertedAmount").decimalValue();
             LocalDate date = LocalDate.parse(tree.get("date").textValue());
-            return new ConversionDto(baseCurrency, amount, to, convertedAmount, date);
+            return new ConversionDto(id, baseCurrency, amount, to, convertedAmount, date);
         }
     }
 
-    // Serializer for ExchangeRateResponse
     public static class ExchangeRateResponseSerializer extends JsonSerializer<ExchangeRateResponse> {
 
         @Override
@@ -64,7 +64,6 @@ public class MyJsonComponent {
         }
     }
 
-    // Deserializer for ExchangeRateResponse
     public static class ExchangeRateResponseDeserializer extends JsonDeserializer<ExchangeRateResponse> {
 
         @Override
@@ -86,7 +85,6 @@ public class MyJsonComponent {
         }
     }
 
-    // Serializer for ErrorDto
     public static class ErrorDtoSerializer extends JsonSerializer<ErrorDto> {
 
         @Override
@@ -101,7 +99,6 @@ public class MyJsonComponent {
         }
     }
 
-    // Deserializer for ErrorDto
     public static class ErrorDtoDeserializer extends JsonDeserializer<ErrorDto> {
 
         @Override
