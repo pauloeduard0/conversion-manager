@@ -50,10 +50,6 @@ public class ConversionService {
         return ConversionMapper.toDto(savedConversion);
     }
 
-    public List<ExchangeRateResponse> getAllCurrency() {
-        return conversionAdapter.getExchangeRates();
-    }
-
     public List<ConversionDto> getAllConversions() {
         List<Conversion> conversions = conversionRepository.findAll();
         return conversions.stream()

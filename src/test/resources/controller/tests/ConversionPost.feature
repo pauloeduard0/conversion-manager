@@ -2,7 +2,7 @@ Feature: Testing POST ConversionController Endpoints
 
   Background:
     * url 'http://localhost:8090'
-    * path '/api/exchange-rates'
+    * path '/conversion'
     * def jsonRequestConversion = read('classpath:controller/requests/request-conversion-create.json')
     * header Content-Type = 'application/json'
 
@@ -40,7 +40,7 @@ Feature: Testing POST ConversionController Endpoints
     Then status 400
     And assert response != null
     And assert responseStatus == 400
-    And match response == {type: 'https://api.conversionmanager.com/errors/bad-request', title: 'Invalid Format Exception', status: 400, detail: "Cannot deserialize value of type that is not a valid `Double` value", instance: '/api/exchange-rates'}
+    And match response == {type: 'https://api.conversionmanager.com/errors/bad-request', title: 'Invalid Format Exception', status: 400, detail: "Cannot deserialize value of type that is not a valid `Double` value", instance: '/conversion'}
     Examples:
       | amount  | to  |
       | invalid | USD |
@@ -59,7 +59,7 @@ Feature: Testing POST ConversionController Endpoints
     Then status 404
     And assert response != null
     And assert responseStatus == 404
-    And match response == {type: 'https://api.api.conversionmanager.com/errors/not-found', title: 'Currency Not Found for Registration', status: 404, detail: "Currency with '<to>' was not found.", instance: '/api/exchange-rates'}
+    And match response == {type: 'https://api.conversionmanager.com/errors/not-found', title: 'Currency Not Found for Registration', status: 404, detail: "Currency with '<to>' was not found. Please check an existing currency for conversion", instance: '/conversion'}
     Examples:
       | amount | to  |
       | 500    | UKK |
@@ -76,7 +76,7 @@ Feature: Testing POST ConversionController Endpoints
     Then status 400
     And assert response != null
     And assert responseStatus == 400
-    And match response == {type: 'https://api.conversionmanager.com/errors/bad-request', title: 'Method Argument Not Valid Exception', status: 400, detail: "The request contains an invalid argument. The field to or amount ,object is null, which violates the validation.", instance: '/api/exchange-rates'}
+    And match response == {type: 'https://api.conversionmanager.com/errors/bad-request', title: 'Method Argument Not Valid Exception', status: 400, detail: "The request contains an invalid argument. The field to or amount ,object is null, which violates the validation.", instance: '/conversion'}
     Examples:
       | amount |
       | 500    |
@@ -92,7 +92,7 @@ Feature: Testing POST ConversionController Endpoints
     Then status 400
     And assert response != null
     And assert responseStatus == 400
-    And match response == {type: 'https://api.conversionmanager.com/errors/bad-request', title: 'Method Argument Not Valid Exception', status: 400, detail: "The request contains an invalid argument. The field to or amount ,object is null, which violates the validation.", instance: '/api/exchange-rates'}
+    And match response == {type: 'https://api.conversionmanager.com/errors/bad-request', title: 'Method Argument Not Valid Exception', status: 400, detail: "The request contains an invalid argument. The field to or amount ,object is null, which violates the validation.", instance: '/conversion'}
     Examples:
       | to  |
       | USD |

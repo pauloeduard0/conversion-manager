@@ -1,7 +1,6 @@
 package br.inatel.conversionmanager.controller;
 
 import br.inatel.conversionmanager.model.dto.ConversionDto;
-import br.inatel.conversionmanager.model.dto.ExchangeRateResponse;
 import br.inatel.conversionmanager.service.ConversionService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -12,18 +11,13 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/exchange-rates")
+@RequestMapping("/conversion")
 public class ConversionController {
 
     private final ConversionService conversionService;
 
     public ConversionController(ConversionService conversionService) {
         this.conversionService = conversionService;
-    }
-
-    @GetMapping("/all")
-    public ResponseEntity<List<ExchangeRateResponse>> getExchangeRates() {
-        return ResponseEntity.ok(conversionService.getAllCurrency());
     }
 
     @GetMapping()
@@ -46,5 +40,4 @@ public class ConversionController {
 
         return ResponseEntity.created(URI.create("")).body(savedConversion);
     }
-
 }

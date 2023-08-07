@@ -59,35 +59,6 @@ class ConversionServiceTest {
     }
 
     @Test
-    void getAllCurrency_shouldReturnExchangeRateResponseList() {
-        ExchangeRateResponse exchangeRateResponse = new ExchangeRateResponse(
-                1687996799L,
-                "EUR",
-                true,
-                Map.of(
-                        "ANG", new BigDecimal("1.968256"),
-                        "SVC", new BigDecimal("9.555569"),
-                        "CAD", new BigDecimal("1.44658"),
-                        "XCD", new BigDecimal("2.949964"),
-                        "USD", new BigDecimal("1.091548")
-                ),
-                "2023-06-28",
-                true
-        );
-
-        when(conversionAdapter.getExchangeRates()).thenReturn(Collections.singletonList(exchangeRateResponse));
-
-        List<ExchangeRateResponse> result = conversionService.getAllCurrency();
-
-        verify(conversionAdapter).getExchangeRates();
-        
-        assertEquals(1, result.size());
-        assertEquals(exchangeRateResponse.base(), result.get(0).base());
-        assertEquals(exchangeRateResponse.rates(), result.get(0).rates());
-    }
-
-
-    @Test
     void givenValidRequest_whenSaving_thenReturnSavedConversion() {
         ExchangeRateResponse exchangeRateResponse = new ExchangeRateResponse(
                 1687996799L,
