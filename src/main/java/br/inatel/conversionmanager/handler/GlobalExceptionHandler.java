@@ -1,8 +1,8 @@
 package br.inatel.conversionmanager.handler;
 
 import br.inatel.conversionmanager.exception.ConversionNotFoundException;
-import br.inatel.conversionmanager.exception.CurrencyConversionException;
 import br.inatel.conversionmanager.exception.CurrencyNotFoundException;
+import br.inatel.conversionmanager.exception.ExternalApiConnectionException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.hibernate.exception.JDBCConnectionException;
@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleCurrencyNotFoundException(CurrencyNotFoundException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
         problemDetail.setTitle("Currency Not Found for Registration");
-        problemDetail.setType(URI.create("https://api.api.conversionmanager.com/errors/not-found"));
+        problemDetail.setType(URI.create("https://api.conversionmanager.com/errors/not-found"));
         return problemDetail;
     }
 
@@ -43,16 +43,16 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleConversionNotFoundException(ConversionNotFoundException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
         problemDetail.setTitle("Conversion Not Found in Database");
-        problemDetail.setType(URI.create("https://api.api.conversionmanager.com/errors/not-found"));
+        problemDetail.setType(URI.create("https://api.conversionmanager.com/errors/not-found"));
         return problemDetail;
     }
 
-    @ExceptionHandler(CurrencyConversionException.class)
+    @ExceptionHandler(ExternalApiConnectionException.class)
     @ResponseStatus(value = HttpStatus.SERVICE_UNAVAILABLE)
-    public ProblemDetail handleCurrencyConversionException(CurrencyConversionException e) {
+    public ProblemDetail handleCurrencyConversionException(ExternalApiConnectionException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         problemDetail.setTitle("Currency API Connection Exception");
-        problemDetail.setType(URI.create("https://api.api.conversionmanager.com/errors/service-unavailable"));
+        problemDetail.setType(URI.create("https://api.conversionmanager.com/errors/service-unavailable"));
         return problemDetail;
     }
 
@@ -71,7 +71,7 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleJsonMappingException(JsonMappingException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
         problemDetail.setTitle("Json Mapping Exception");
-        problemDetail.setType(URI.create("https://api.api.conversionmanager.com/errors/bad-request"));
+        problemDetail.setType(URI.create("https://api.conversionmanager.com/errors/bad-request"));
         return problemDetail;
     }
 
@@ -80,7 +80,7 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleWebExchangeBindException(WebExchangeBindException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
         problemDetail.setTitle("Web Exchange Bind Exception");
-        problemDetail.setType(URI.create("https://api.api.conversionmanager.com/errors/bad-request"));
+        problemDetail.setType(URI.create("https://api.conversionmanager.com/errors/bad-request"));
         return problemDetail;
     }
 
@@ -89,7 +89,7 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleJDBCConnectionException(JDBCConnectionException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         problemDetail.setTitle("JDBC Connection Exception");
-        problemDetail.setType(URI.create("https://api.api.conversionmanager.com/errors/service-unavailable"));
+        problemDetail.setType(URI.create("https://api.conversionmanager.com/errors/service-unavailable"));
         return problemDetail;
     }
 
