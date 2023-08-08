@@ -16,7 +16,6 @@ Feature: Testing POST ConversionController Endpoints
     Given request jsonRequestConversion
     When method POST
     Then status 201
-    And assert responseStatus == 201
     And match response.id == '#regex (?i)^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$'
     And match response.baseCurrency == "EURO"
     And match response.amount == parseInt('<amount>')
@@ -38,9 +37,11 @@ Feature: Testing POST ConversionController Endpoints
     Given request jsonRequestConversion
     When method POST
     Then status 400
-    And assert response != null
-    And assert responseStatus == 400
-    And match response == {type: 'https://api.conversionmanager.com/errors/bad-request', title: 'Invalid Format Exception', status: 400, detail: "Cannot deserialize value of type that is not a valid `Double` value", instance: '/conversion'}
+    And match response.type == 'https://api.conversionmanager.com/errors/bad-request'
+    And match response.title == 'Invalid Format Exception'
+    And match response.status == 400
+    And match response.detail == "Cannot deserialize value of type that is not a valid `Double` value"
+    And match response.instance == '/conversion'
     Examples:
       | amount  | to  |
       | invalid | USD |
@@ -57,9 +58,11 @@ Feature: Testing POST ConversionController Endpoints
     Given request jsonRequestConversion
     When method POST
     Then status 404
-    And assert response != null
-    And assert responseStatus == 404
-    And match response == {type: 'https://api.conversionmanager.com/errors/not-found', title: 'Currency Not Found for Registration', status: 404, detail: "Currency with '<to>' was not found. Please check an existing currency for conversion", instance: '/conversion'}
+    And match response.type == 'https://api.conversionmanager.com/errors/not-found'
+    And match response.title == 'Currency Not Found for Registration'
+    And match response.status == 404
+    And match response.detail == "Currency with '<to>' was not found. Please check an existing currency for conversion"
+    And match response.instance == '/conversion'
     Examples:
       | amount | to  |
       | 500    | UKK |
@@ -74,9 +77,11 @@ Feature: Testing POST ConversionController Endpoints
     Given request requestPayload
     When method POST
     Then status 400
-    And assert response != null
-    And assert responseStatus == 400
-    And match response == {type: 'https://api.conversionmanager.com/errors/bad-request', title: 'Method Argument Not Valid Exception', status: 400, detail: "The request contains an invalid argument. The field to or amount ,object is null, which violates the validation.", instance: '/conversion'}
+    And match response.type == 'https://api.conversionmanager.com/errors/bad-request'
+    And match response.title == 'Method Argument Not Valid Exception'
+    And match response.status == 400
+    And match response.detail == "The request contains an invalid argument. The field to or amount ,object is null, which violates the validation."
+    And match response.instance == '/conversion'
     Examples:
       | amount |
       | 500    |
@@ -90,9 +95,11 @@ Feature: Testing POST ConversionController Endpoints
     Given request requestPayload
     When method POST
     Then status 400
-    And assert response != null
-    And assert responseStatus == 400
-    And match response == {type: 'https://api.conversionmanager.com/errors/bad-request', title: 'Method Argument Not Valid Exception', status: 400, detail: "The request contains an invalid argument. The field to or amount ,object is null, which violates the validation.", instance: '/conversion'}
+    And match response.type == 'https://api.conversionmanager.com/errors/bad-request'
+    And match response.title == 'Method Argument Not Valid Exception'
+    And match response.status == 400
+    And match response.detail == "The request contains an invalid argument. The field to or amount ,object is null, which violates the validation."
+    And match response.instance == '/conversion'
     Examples:
       | to  |
       | USD |
