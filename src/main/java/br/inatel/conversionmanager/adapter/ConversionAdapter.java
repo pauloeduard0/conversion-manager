@@ -1,54 +1,39 @@
 package br.inatel.conversionmanager.adapter;
 
-import br.inatel.conversionmanager.exception.ExternalApiConnectionException;
-import br.inatel.conversionmanager.model.dto.ExchangeRateResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientRequestException;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-@Service
+@Configuration
 @Slf4j
 public class ConversionAdapter {
 
-    private final WebClient webClient;
     @Value("${api.conversion.host}")
     private String currencyHost;
-    @Value("${api.conversion.base}")
-    private String currencyBaseUrl;
     @Value("${api.conversion.key}")
     private String currencyKey;
 
-    public ConversionAdapter() {
-        this.webClient = WebClient.builder()
+    @Bean
+    public WebClient getCurrencyWebClient()
+    {
+        return WebClient.builder()
+                .baseUrl(this.buildCurrencyBaseUrl())
                 .build();
     }
 
-    @Cacheable("exchangeRates")
-    public List<ExchangeRateResponse> getExchangeRates() {
-        String date = String.valueOf(LocalDate.now());
+    @Bean
+    public String getCurrencyHost() {
+        return currencyHost;
+    }
 
-        try {
-            ExchangeRateResponse response = webClient.get()
-                    .uri(currencyBaseUrl + "/{date}", date)
-                    .header("X-RapidAPI-Key", currencyKey)
-                    .header("X-RapidAPI-Host", currencyHost)
-                    .retrieve()
-                    .bodyToMono(ExchangeRateResponse.class)
-                    .block();
+    @Bean
+    public String getCurrencyKey() {
+        return currencyKey;
+    }
 
-            List<ExchangeRateResponse> exchangeRates = new ArrayList<>();
-            exchangeRates.add(response);
-            return exchangeRates;
-        } catch (WebClientRequestException e) {
-            log.error(e.getMessage());
-            throw new ExternalApiConnectionException(this.currencyBaseUrl);
-        }
+    private String buildCurrencyBaseUrl() {
+        return String.format("https://%s", currencyHost);
     }
 }

@@ -1,12 +1,12 @@
 package br.inatel.conversionmanager.service;
 
-import br.inatel.conversionmanager.adapter.ConversionAdapter;
 import br.inatel.conversionmanager.exception.ConversionNotFoundException;
 import br.inatel.conversionmanager.exception.CurrencyNotFoundException;
 import br.inatel.conversionmanager.mapper.ConversionMapper;
 import br.inatel.conversionmanager.model.dto.ConversionDto;
 import br.inatel.conversionmanager.model.dto.ExchangeRateResponse;
 import br.inatel.conversionmanager.model.entities.Conversion;
+import br.inatel.conversionmanager.provider.CurrencyRateProvider;
 import br.inatel.conversionmanager.repository.ConversionRepository;
 import org.springframework.stereotype.Service;
 
@@ -21,18 +21,18 @@ import java.util.UUID;
 public class ConversionService {
 
     private final ConversionRepository conversionRepository;
-    private final ConversionAdapter conversionAdapter;
+    private final CurrencyRateProvider currencyRateProvider;
 
-    public ConversionService(ConversionRepository conversionRepository, ConversionAdapter conversionAdapter) {
+    public ConversionService(ConversionRepository conversionRepository, CurrencyRateProvider currencyRateProvider) {
         this.conversionRepository = conversionRepository;
-        this.conversionAdapter = conversionAdapter;
+        this.currencyRateProvider = currencyRateProvider;
     }
 
     public ConversionDto saveConversion(ConversionDto conversionDto) {
         LocalDate currentDate = LocalDate.now();
         String baseCurrency = "EURO";
 
-        BigDecimal exchangeRate = findExchangeRateByCurrency(conversionAdapter.getExchangeRates(), conversionDto.to());
+        BigDecimal exchangeRate = findExchangeRateByCurrency(currencyRateProvider.getExchangeRates(), conversionDto.to());
 
         BigDecimal convertedAmount = conversionDto.amount().multiply(exchangeRate).setScale(5, RoundingMode.HALF_UP);
 

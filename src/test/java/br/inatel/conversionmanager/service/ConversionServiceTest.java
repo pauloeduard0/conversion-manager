@@ -6,6 +6,7 @@ import br.inatel.conversionmanager.exception.CurrencyNotFoundException;
 import br.inatel.conversionmanager.model.dto.ConversionDto;
 import br.inatel.conversionmanager.model.dto.ExchangeRateResponse;
 import br.inatel.conversionmanager.model.entities.Conversion;
+import br.inatel.conversionmanager.provider.CurrencyRateProvider;
 import br.inatel.conversionmanager.repository.ConversionRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +31,7 @@ class ConversionServiceTest {
     @Mock
     private ConversionRepository conversionRepository;
     @Mock
-    private ConversionAdapter conversionAdapter;
+    private CurrencyRateProvider currencyRateProvider;
 
     @InjectMocks
     private ConversionService conversionService;
@@ -74,7 +75,7 @@ class ConversionServiceTest {
                 "2023-06-28",
                 true
         );
-        when(conversionAdapter.getExchangeRates()).thenReturn(Collections.singletonList(exchangeRateResponse));
+        when(currencyRateProvider.getExchangeRates()).thenReturn(Collections.singletonList(exchangeRateResponse));
 
         UUID id = UUID.fromString("9b9a5998-52c5-4b60-8d3e-470191491056");
 
@@ -93,14 +94,14 @@ class ConversionServiceTest {
         assertEquals(savedConversion.getConverted(), result.convertedAmount());
         assertEquals(savedConversion.getDate(), result.date());
 
-        verify(conversionAdapter).getExchangeRates();
+        verify(currencyRateProvider).getExchangeRates();
     }
 
     @Test
     void givenInvalidCurrency_whenSaving_thenThrowCurrencyNotFoundException() {
         UUID id = UUID.fromString("9b9a5998-52c5-4b60-8d3e-470191491056");
 
-        when(conversionAdapter.getExchangeRates()).thenReturn(Collections.emptyList());
+        when(currencyRateProvider.getExchangeRates()).thenReturn(Collections.emptyList());
 
         ConversionDto conversionDto = createConversionDto(id, new BigDecimal(500), "INVALID", LocalDate.now(), new BigDecimal(0));
 
