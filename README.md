@@ -6,7 +6,7 @@ To set up and run the Conversion Manager REST application, please ensure you hav
 - Spring Boot
 - Maven
 - Insomnia or Postman
-- Docker
+- Docker on Ubuntu
 - Git
 - IntelliJ IDEA
 
@@ -16,32 +16,15 @@ To set up and run the Conversion Manager REST application, please ensure you hav
 
 *Clone this repository.*
 
-Follow the instructions below to run the application using Docker:
+*Follow the step below to run the project using IntelliJ:*
 
-- Create the network:
+- Build a Maven project and generate the artifacts in the terminal:
 
-docker network create inatel
-
-- Start the MySql database:
-
-docker container run --name mysql --network=inatel -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=bootdb -p 3306:3306 -p 33060:33060 -d mysql
-
+mvn clean install -DskipTests
 
 ---
 
-# Using Docker Compose to Run the Project
-
-If you prefer using Docker Compose, the application will utilize the MySQL database image (Docker).
-
-*Follow the steps below to run the project using IntelliJ:*
-
-mvn clean install -DskipTest
-
 *Run the following commands on Docker:*
-
-- Create the network:
-
-docker network create inatel
 
 - Start docker compose:
 
