@@ -38,97 +38,92 @@ docker compose up --build
 
 To register a new currency conversion, use the following endpoint:
 
-- POST  http://localhost:8080/api/exchange-rates
+- POST  http://localhost:8080/conversion
 
 Request body:
 
 ```
 {
-    "amount": 800,
+    "amount": 500,
     "to": "USD"
 }
-
 ```
 
 To retrieve all conversions from Conversion Manager, use the following endpoint:
 
-- GET  http://localhost:8080/api/exchange-rates
+- GET  http://localhost:8080/conversion
 
 Response body:
 
 ```
 [
     {
-         "baseCurrency": "EURO",
-         "amount": 800.0,
-         "to": "GBP",
-         "convertedAmount": 687.241,
-         "date": "2023-07-14"
+        "id": "4517fea1-20dc-4505-bf54-888deaed7764",
+        "baseCurrency": "EURO",
+        "amount": 600.00000,
+        "to": "CAD",
+        "convertedAmount": 885.08760,
+        "date": "2023-08-10"
     },
     {
-         "baseCurrency": "EURO",
-         "amount": 800.0,
-         "to": "JPY",
-         "convertedAmount": 124788.82,
-         "date": "2023-07-14"
-    }
+        "id": "ad27fb2a-5ab2-434d-962e-cf5206971a86",
+        "baseCurrency": "EURO",
+        "amount": 500.00000,
+        "to": "USD",
+        "convertedAmount": 549.52600,
+        "date": "2023-08-10"
+    },
     {
-         "baseCurrency": "EURO",
-         "amount": 800.0,
-         "to": "USD",
-         "convertedAmount": 896.946,
-         "date": "2023-07-14"
-    }
-]
-```
-
-To retrieve all conversion rates available from the API, use the following endpoint::
-
-- GET  http://localhost:8080/api/exchange-rates/all
-
-Response body:
-
-```
-[
-    {
-        "timestamp": 1689338403,
-        "base": "EUR",
-        "success": true,
-        "rates": {
-            "ANG": 2.019441,
-            "SVC": 9.804953,
-            "CAD": 1.471587,
-            "XCD": 3.030053,
-            "MVR": 17.277676,
-            ...
-            },
-        "date": "2023-07-14",
-        "historical": true
+        "id": "fa8f37a6-068b-4297-b163-9fffebc68c94",
+        "baseCurrency": "EURO",
+        "amount": 1000,
+        "to": "USD",
+        "convertedAmount": 1099.05200,
+        "date": "2023-08-10"
     }
 ]
 ```
 
 To retrieve conversions for a specific currency, use the following endpoint:
 
-- GET  http://localhost:8080/api/exchange-rates/USD
+- GET  http://localhost:8080/conversion?currency=USD
 
 Response body:
 
 ```
 [
     {
+        "id": "c2284079-5bb5-40ff-bfc6-27009b6f1f70",
         "baseCurrency": "EURO",
-        "amount": 800.0,
+        "amount": 500.00000,
         "to": "USD",
-        "convertedAmount": 896.946,
-        "date": "2023-07-14"
+        "convertedAmount": 549.31450,
+        "date": "2023-08-10"
     },
     {
+        "id": "fa8f37a6-068b-4297-b163-9fffebc68c94",
         "baseCurrency": "EURO",
-        "amount": 800.0,
+        "amount": 1000.00000,
         "to": "USD",
-        "convertedAmount": 896.946,
-        "date": "2023-07-14"
+        "convertedAmount": 1099.05200,
+        "date": "2023-08-10"
     }
 ]
+```
+
+To retrieve conversions for a specific ID, use the following endpoint (id example):
+
+- GET  http://localhost:8080/conversion?id=c2284079-5bb5-40ff-bfc6-27009b6f1f70
+
+Response body:
+
+```
+{
+    "id": "c2284079-5bb5-40ff-bfc6-27009b6f1f70",
+    "baseCurrency": "EURO",
+    "amount": 500.00000,
+    "to": "USD",
+    "convertedAmount": 549.31450,
+    "date": "2023-08-10"
+}
 ```
